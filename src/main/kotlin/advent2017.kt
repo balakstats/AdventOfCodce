@@ -1,0 +1,2 @@
+class advent2017 {
+}
