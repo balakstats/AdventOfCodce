@@ -553,8 +553,105 @@ class Advent2024 {
             println("2024 day 07.2: $solvedEquations")
         }
 
-        fun day8_1() {
+        fun day8_1() { // 329
+            val rawTextLines =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day8.txt").readLines()
+            val lineLength = rawTextLines[0].length
+            val numberOfLines = rawTextLines.size
+            val coordinates = mutableSetOf<Pair<Pair<Int, Int>, String>>()
+            rawTextLines.forEachIndexed { indexLine, line ->
+                line.forEachIndexed { indexChar, c ->
+                    if (c != '.') {
+                        coordinates.add(Pair(Pair(indexChar, indexLine), c.toString()))
+                    }
+                }
+            }
+            val antiNodes = mutableSetOf<Pair<Int, Int>>()
+            val antennas = coordinates.groupBy { it.second }
+            antennas.forEach outer@{ (_, u) ->
+                u.forEachIndexed { index, pair ->
+                    if (index == u.size - 1) {
+                        return@outer
+                    }
+                    for (i in index + 1 until u.size) {
+                        val xDiff =
+                            if (pair.first.first == u[i].first.first) 0 else pair.first.first - u[i].first.first
+                        val yDiff =
+                            if (pair.first.second == u[i].first.second) 0 else u[i].first.second - pair.first.second
+                        if (yDiff < 0) {
+                            println("ALARM Y")
+                            return
+                        }
 
+                        val antiNodeXFirst = pair.first.first + xDiff
+                        val antiNodeYFirst = pair.first.second - yDiff
+                        if (antiNodeXFirst in 0 until lineLength && antiNodeYFirst >= 0) {
+                            antiNodes.add(Pair(antiNodeXFirst, antiNodeYFirst))
+                        }
+
+                        val antiNodeXSecond = u[i].first.first - xDiff
+                        val antiNodeYSecond = u[i].first.second + yDiff
+                        if (antiNodeXSecond in 0 until lineLength && antiNodeYSecond < numberOfLines) {
+                            antiNodes.add(Pair(antiNodeXSecond, antiNodeYSecond))
+                        }
+                    }
+                }
+            }
+            println("2024 day 08.1: ${antiNodes.size}")
+        }
+
+        fun day8_2() {
+            val rawTextLines =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day8.txt").readLines()
+            val lineLength = rawTextLines[0].length
+            val numberOfLines = rawTextLines.size
+            val coordinates = mutableSetOf<Pair<Pair<Int, Int>, String>>()
+            rawTextLines.forEachIndexed { indexLine, line ->
+                line.forEachIndexed { indexChar, c ->
+                    if (c != '.') {
+                        coordinates.add(Pair(Pair(indexChar, indexLine), c.toString()))
+                    }
+                }
+            }
+            val antiNodes = mutableSetOf<Pair<Int, Int>>()
+            val antennas = coordinates.groupBy { it.second }
+            antennas.forEach outer@{ (_, u) ->
+                u.forEachIndexed { index, pair ->
+                    if (index == u.size - 1) {
+                        return@outer
+                    }
+                    for (i in index + 1 until u.size) {
+                        val xDiff =
+                            if (pair.first.first == u[i].first.first) 0 else pair.first.first - u[i].first.first
+                        val yDiff =
+                            if (pair.first.second == u[i].first.second) 0 else u[i].first.second - pair.first.second
+                        if (yDiff < 0) {
+                            println("ALARM Y")
+                            return
+                        }
+
+                        var createAntinodes = false
+                        val antiNodeXFirst = pair.first.first + xDiff
+                        val antiNodeYFirst = pair.first.second - yDiff
+                        if (antiNodeXFirst in 0 until lineLength && antiNodeYFirst >= 0) {
+                            antiNodes.add(Pair(antiNodeXFirst, antiNodeYFirst))
+                            createAntinodes = true
+                        }
+
+                        val antiNodeXSecond = u[i].first.first - xDiff
+                        val antiNodeYSecond = u[i].first.second + yDiff
+                        if (antiNodeXSecond in 0 until lineLength && antiNodeYSecond < numberOfLines) {
+                            antiNodes.add(Pair(antiNodeXSecond, antiNodeYSecond))
+                            createAntinodes = true
+                        }
+
+                        if (createAntinodes) {
+
+                        }
+                    }
+                }
+            }
+            println("2024 day 08.2: ${antiNodes.size}")
         }
 
         fun test() {
@@ -580,8 +677,8 @@ class Advent2024 {
 //            day6_2()
 //            day7_1()
 //            day7_2()
-            day8_1()
-//            day8_2()
+//            day8_1()
+            day8_2()
 //            day9_1()
 //            day9_2()
 //            day10_1()
