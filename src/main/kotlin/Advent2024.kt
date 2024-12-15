@@ -3,9 +3,9 @@ import Utils.Companion.readIntCsv
 import Utils.Companion.readStringCsv
 import java.io.File
 import kotlin.math.abs
+import kotlin.math.pow
 
 class Advent2024 {
-    // C:\Users\bala\IdeaProjects\AdventOfCodce\src\main\resources\2024\day1_list1.csv
     companion object {
         fun day1_1() { // 2264607
             val list1 =
@@ -439,26 +439,148 @@ class Advent2024 {
             println("2024 day 06.2: ${loopDetected.size}")
         }
 
-        fun day7_1() {
+        fun day7_1() { // 12839601725877
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
+            var solvedEquations = 0L
+            rawText.forEach loop@{ line ->
+                val splitted = line.split(": ")
+                val result = splitted[0].toLong()
+                val numbers = splitted[1].split(" ").map { it.toLong() }.toList()
+                if (numbers.sum() == result) {
+                    solvedEquations += result
+                    return@loop
+                }
+                if (numbers.reduce { acc, i -> acc * i }.toLong() == result) {
+                    solvedEquations += result
+                    return@loop
+                }
+
+                val operators = mutableListOf<String>()
+                for (i in 1 until 2.0.pow(numbers.size.toDouble() - 1).toInt() - 1) {
+                    operators.add(Integer.toBinaryString(i).padStart(numbers.size - 1, '0'))
+                }
+                operators.forEach inner@{
+                    var tmp = numbers[0]
+                    it.forEachIndexed { index, c ->
+                        if (c == '0') {
+                            tmp += numbers[index + 1]
+                        } else {
+                            tmp *= numbers[index + 1]
+                        }
+                        if (tmp > result) {
+                            return@inner
+                        }
+                    }
+                    if (tmp == result) {
+                        solvedEquations += result
+                        return@loop
+                    }
+                }
+            }
+            println("2024 day 07.1: $solvedEquations")
+        }
+
+        fun day7_2() { // 149956401519484
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
+            var solvedEquations = 0L
+            rawText.forEach loop@{ line ->
+                val splitted = line.split(": ")
+                val result = splitted[0].toLong()
+                val numbers = splitted[1].split(" ").map { it.toLong() }.toList()
+                if (numbers.sum() == result) {
+                    solvedEquations += result
+                    return@loop
+                }
+                if (numbers.reduce { acc, i -> acc * i }.toLong() == result) {
+                    solvedEquations += result
+                    return@loop
+                }
+
+                val operators = mutableListOf<String>()
+                for (i in 1 until 2.0.pow(numbers.size.toDouble() - 1).toInt() - 1) {
+                    operators.add(Integer.toBinaryString(i).padStart(numbers.size - 1, '0'))
+                }
+                operators.forEach inner1@{
+                    var tmp = numbers[0]
+                    it.forEachIndexed { index, c ->
+                        if (c == '0') {
+                            tmp += numbers[index + 1]
+                        } else {
+                            tmp *= numbers[index + 1]
+                        }
+                        if (tmp > result) {
+                            return@inner1
+                        }
+                    }
+                    if (tmp == result) {
+                        solvedEquations += result
+                        return@loop
+                    }
+                }
+
+                for (i in 0 until numbers.size) {
+                    val operatorsNew = mutableListOf<String>()
+                    for (j in 0 until 3.0.pow(numbers.size.toDouble() - 1).toInt()) {
+                        operatorsNew.add(Integer.toUnsignedString(j, 3).padStart(numbers.size - 1, '0'))
+                    }
+
+                    operatorsNew.forEach inner2@{
+                        var tmp = numbers[0]
+                        it.forEachIndexed { index, c ->
+                            if (c == '0') {
+                                tmp += numbers[index + 1]
+                            }
+                            if (c == '1') {
+                                tmp *= numbers[index + 1]
+                            }
+                            if (c == '2') {
+                                tmp = "$tmp${numbers[index + 1]}".toLong()
+                            }
+
+                            if (tmp > result) {
+                                return@inner2
+                            }
+                        }
+                        if (tmp == result) {
+                            solvedEquations += result
+                            return@loop
+                        }
+                    }
+                }
+            }
+            println("2024 day 07.2: $solvedEquations")
+        }
+
+        fun day8_1() {
 
         }
 
+        fun test() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
+            val result = Day07(rawText).solvePart2()
+            println(result)
+        }
+
         fun advent2024() {
-            day1_1()
-            day1_2()
-            day2_1()
-            day2_2()
-            day3_1()
-            day3_2()
-            day4_1()
-            day4_2()
-            day5_1()
-            day5_2()
-            day6_1()
-            day6_2()
-            day7_1()
+//            test()
+//            day1_1()
+//            day1_2()
+//            day2_1()
+//            day2_2()
+//            day3_1()
+//            day3_2()
+//            day4_1()
+//            day4_2()
+//            day5_1()
+//            day5_2()
+//            day6_1()
+//            day6_2()
+//            day7_1()
 //            day7_2()
-//            day8_1()
+            day8_1()
 //            day8_2()
 //            day9_1()
 //            day9_2()
