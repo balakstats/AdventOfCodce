@@ -1,3 +1,4 @@
+import Utils.Companion.calculateGCD
 import Utils.Companion.isReportSafe
 import Utils.Companion.readIntCsv
 import Utils.Companion.readStringCsv
@@ -600,7 +601,7 @@ class Advent2024 {
             println("2024 day 08.1: ${antiNodes.size}")
         }
 
-        fun day8_2() {
+        fun day8_2() { //1147 - 1217,1214
             val rawTextLines =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day8.txt").readLines()
             val lineLength = rawTextLines[0].length
@@ -618,6 +619,7 @@ class Advent2024 {
             antennas.forEach outer@{ (_, u) ->
                 u.forEachIndexed { index, pair ->
                     if (index == u.size - 1) {
+                        antiNodes.add(Pair(u[index].first.first, u[index].first.second))
                         return@outer
                     }
                     for (i in index + 1 until u.size) {
@@ -629,24 +631,40 @@ class Advent2024 {
                             println("ALARM Y")
                             return
                         }
+                        if (xDiff == 0) {
+                            println("ALARM XDiff=0")
+                            return
+                        }
+                        if (yDiff == 0) {
+                            println("ALARM YDiff=0")
+                            return
+                        }
+                        antiNodes.add(Pair(pair.first.first, pair.first.second))
+                        antiNodes.add(Pair(u[i].first.first, u[i].first.second))
 
-                        var createAntinodes = false
-                        val antiNodeXFirst = pair.first.first + xDiff
-                        val antiNodeYFirst = pair.first.second - yDiff
-                        if (antiNodeXFirst in 0 until lineLength && antiNodeYFirst >= 0) {
+                        val gcd = calculateGCD(
+                            abs(pair.first.first - u[i].first.first),
+                            abs(pair.first.second - u[i].first.second)
+                        )
+                        val normalizedXDiff = xDiff / gcd
+                        val normalizedYDiff = yDiff / gcd
+
+                        val stepUp = Pair(pair.first.first + normalizedXDiff, pair.first.second - normalizedYDiff)
+                        var antiNodeXFirst = stepUp.first
+                        var antiNodeYFirst = stepUp.second
+                        while (antiNodeXFirst in 0 until lineLength && antiNodeYFirst >= 0) {
                             antiNodes.add(Pair(antiNodeXFirst, antiNodeYFirst))
-                            createAntinodes = true
+                            antiNodeXFirst += normalizedXDiff
+                            antiNodeYFirst -= normalizedYDiff
                         }
 
-                        val antiNodeXSecond = u[i].first.first - xDiff
-                        val antiNodeYSecond = u[i].first.second + yDiff
-                        if (antiNodeXSecond in 0 until lineLength && antiNodeYSecond < numberOfLines) {
-                            antiNodes.add(Pair(antiNodeXSecond, antiNodeYSecond))
-                            createAntinodes = true
-                        }
-
-                        if (createAntinodes) {
-
+                        val stepDown = Pair(pair.first.first - normalizedXDiff, pair.first.second + normalizedYDiff)
+                        antiNodeXFirst = stepDown.first
+                        antiNodeYFirst = stepDown.second
+                        while (antiNodeXFirst in 0 until lineLength && antiNodeYFirst < numberOfLines) {
+                            antiNodes.add(Pair(antiNodeXFirst, antiNodeYFirst))
+                            antiNodeXFirst -= normalizedXDiff
+                            antiNodeYFirst += normalizedYDiff
                         }
                     }
                 }
