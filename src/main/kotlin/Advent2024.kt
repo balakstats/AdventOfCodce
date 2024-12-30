@@ -672,6 +672,133 @@ class Advent2024 {
             println("2024 day 08.2: ${antiNodes.size}")
         }
 
+        fun day9_1() { // 6353658451014
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day9.txt").readText()
+            var result: Long = 0
+            val listOfBlocksAndSpaces = mutableListOf<MutableList<Int>>()
+            var id = 0
+            var isBlock = true
+            rawText.forEach {
+                if (isBlock) {
+                    listOfBlocksAndSpaces.add(mutableListOf(id++, it.digitToInt()))
+                } else {
+                    listOfBlocksAndSpaces.add(mutableListOf(-1, it.digitToInt()))
+                }
+                isBlock = !isBlock
+            }
+            val reversedListOfBlocks =
+                listOfBlocksAndSpaces.reversed().filter { it[0] > -1 }.map { it.toList() }.toList()
+            run outer@{
+                reversedListOfBlocks.forEach loop@{ block ->
+                    val indexOfFirstFreeSpace = listOfBlocksAndSpaces.indexOfFirst { it[0] < 0 }
+                    if (listOfBlocksAndSpaces[indexOfFirstFreeSpace + 1][0] == -1) {
+//                        print("break")
+                        return@outer
+                    }
+
+                    var numberOfSpaces = listOfBlocksAndSpaces.first { it[0] < 0 }[1]
+                    var numberOfBlocks = block[1]
+                    val indexOfLastBlock = listOfBlocksAndSpaces.indexOfLast { it[0] > -1 }
+                    var indexOfFirstSpace = listOfBlocksAndSpaces.indexOfFirst { it[0] < 0 }
+                    while (numberOfSpaces < numberOfBlocks) {
+                        listOfBlocksAndSpaces[indexOfFirstSpace][0] = block[0]
+                        listOfBlocksAndSpaces[indexOfLastBlock][1] = numberOfBlocks - numberOfSpaces
+                        listOfBlocksAndSpaces.add(mutableListOf(-1, numberOfSpaces))
+
+                        indexOfFirstSpace = listOfBlocksAndSpaces.indexOfFirst { it[0] < 0 }
+                        numberOfBlocks -= numberOfSpaces
+                        numberOfSpaces = listOfBlocksAndSpaces.first { it[0] < 0 }[1]
+                    }
+                    if (numberOfBlocks in 1..<numberOfSpaces) {
+                        listOfBlocksAndSpaces[indexOfLastBlock][0] = -1
+                        listOfBlocksAndSpaces[indexOfFirstSpace][1] = numberOfSpaces - numberOfBlocks
+                        listOfBlocksAndSpaces.add(indexOfFirstSpace, mutableListOf(block[0], numberOfBlocks))
+                        if (indexOfLastBlock < indexOfFirstSpace) {
+                            return@outer
+                        }
+                        return@loop
+                    }
+                    if (indexOfLastBlock < indexOfFirstSpace) {
+                        return@outer
+                    }
+                    if (numberOfBlocks == numberOfSpaces && numberOfBlocks > 0) {
+                        listOfBlocksAndSpaces[indexOfFirstSpace][0] = block[0]
+                        listOfBlocksAndSpaces[indexOfLastBlock][0] = -1
+                    }
+                    if (indexOfLastBlock < indexOfFirstSpace) {
+                        return@outer
+                    }
+                }
+            }
+
+            val listOfBlocksAndSpacesFiltered = listOfBlocksAndSpaces.filter { it[0] > -1 }
+            var i = -1
+            listOfBlocksAndSpacesFiltered.forEach { block ->
+                for (j in 0 until block[1]) {
+                    result += block[0] * ++i
+                }
+            }
+            println("2024 day 09.1: $result")
+        }
+
+        fun day9_2() { // 6382582136592
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day9.txt").readText()
+            var result: Long = 0
+            val listOfBlocksAndSpaces = mutableListOf<MutableList<Int>>()
+            var id = 0
+            var isBlock = true
+            rawText.forEach {
+                if (isBlock) {
+                    listOfBlocksAndSpaces.add(mutableListOf(id++, it.digitToInt()))
+                } else {
+                    listOfBlocksAndSpaces.add(mutableListOf(-1, it.digitToInt()))
+                }
+                isBlock = !isBlock
+            }
+            val reversedListOfBlocks =
+                listOfBlocksAndSpaces.reversed().filter { it[0] > -1 }.map { it.toList() }.toList()
+            run outer@{
+                reversedListOfBlocks.forEach { block ->
+                    val indexOfFirstFreeSpace = listOfBlocksAndSpaces.indexOfFirst { it[0] == -1 }
+                    val indexOfBlock = listOfBlocksAndSpaces.indexOfFirst { it[0] == block[0] }
+                    if (indexOfFirstFreeSpace > indexOfBlock) {
+                        return@outer
+                    }
+                    val freeSpaceNeeded = block[1]
+                    val indexOfFreeSpaceNeeded =
+                        listOfBlocksAndSpaces.indexOfFirst { it[0] == -1 && it[1] >= freeSpaceNeeded }
+                    if (indexOfFreeSpaceNeeded > -1 && indexOfFreeSpaceNeeded < indexOfBlock) {
+                        val numberOfFreeSpaces = listOfBlocksAndSpaces[indexOfFreeSpaceNeeded][1]
+                        listOfBlocksAndSpaces[indexOfBlock][0] = -1
+                        if (numberOfFreeSpaces == freeSpaceNeeded) {
+                            listOfBlocksAndSpaces[indexOfFreeSpaceNeeded][0] = block[0]
+                        } else {
+                            listOfBlocksAndSpaces[indexOfFreeSpaceNeeded][1] = numberOfFreeSpaces - freeSpaceNeeded
+                            listOfBlocksAndSpaces.add(indexOfFreeSpaceNeeded, mutableListOf(block[0], freeSpaceNeeded))
+                        }
+                    }
+                }
+            }
+
+            var i = -1
+            listOfBlocksAndSpaces.forEach loop@{ block ->
+                if (block[0] == -1) {
+                    i += block[1]
+                    return@loop
+                }
+                for (j in 0 until block[1]) {
+                    result += block[0] * ++i
+                }
+            }
+            println("2024 day 09.2: $result")
+        }
+
+        fun day10_1() {
+
+        }
+
         fun test() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
@@ -696,10 +823,10 @@ class Advent2024 {
 //            day7_1()
 //            day7_2()
 //            day8_1()
-            day8_2()
+//            day8_2()
 //            day9_1()
 //            day9_2()
-//            day10_1()
+            day10_1()
 //            day10_2()
 //            day11_1()
 //            day11_2()
