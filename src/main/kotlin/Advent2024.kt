@@ -795,8 +795,107 @@ class Advent2024 {
             println("2024 day 09.2: $result")
         }
 
-        fun day10_1() {
+        fun day10_1() { // 587
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day10.txt").readLines()
+            var result = 0
+            val currentPositions = mutableListOf<Pair<Int, Int>>()
+            rawText.forEachIndexed { indexLine, line ->
+                line.forEachIndexed inner@{ indexChar, char ->
+                    if (char == '0') {
+                        currentPositions.add(Pair(indexLine, indexChar))
+                    }
+                }
+            }
+            val lastRow = rawText.size
+            val lastColumn = rawText[0].length
+            currentPositions.forEach { outer ->
+                var currentHeight = 0
+                var currentPaths = mutableSetOf<Pair<Int, Int>>()
+                currentPaths.add(Pair(outer.first, outer.second))
+                while (currentHeight < 9) {
+                    val tmp = mutableSetOf<Pair<Int, Int>>()
+                    currentPaths.forEach { inner ->
+                        if (inner.first + 1 < lastRow && rawText[inner.first + 1][inner.second].digitToInt() == currentHeight + 1) {
+                            tmp.add(Pair(inner.first + 1, inner.second))
+                        }
+                        if (inner.first - 1 >= 0 && rawText[inner.first - 1][inner.second].digitToInt() == currentHeight + 1) {
+                            tmp.add(Pair(inner.first - 1, inner.second))
+                        }
+                        if (inner.second + 1 < lastColumn && rawText[inner.first][inner.second + 1].digitToInt() == currentHeight + 1) {
+                            tmp.add(Pair(inner.first, inner.second + 1))
+                        }
+                        if (inner.second - 1 >= 0 && rawText[inner.first][inner.second - 1].digitToInt() == currentHeight + 1) {
+                            tmp.add(Pair(inner.first, inner.second - 1))
+                        }
+                    }
+                    currentPaths = tmp.toMutableSet()
+                    currentHeight++
+                }
+                result += currentPaths.size
+            }
+            println("2024 day 10.1: $result")
+        }
 
+        fun day10_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day10.txt").readLines()
+            var result = 0
+            val currentPositions = mutableListOf<Pair<Int, Int>>()
+            val currentPaths = mutableSetOf<MutableList<Pair<Int, Int>>>()
+            rawText.forEachIndexed { indexLine, line ->
+                line.forEachIndexed inner@{ indexChar, char ->
+                    if (char == '0') {
+                        currentPositions.add(Pair(indexLine, indexChar))
+                    }
+                }
+            }
+            val lastRow = rawText.size
+            val lastColumn = rawText[0].length
+            currentPositions.forEach { outer ->
+                var currentHeight = 0
+                var currentPathsTmp = mutableSetOf<MutableList<Pair<Int, Int>>>()
+                currentPathsTmp.add(listOf(Pair(outer.first, outer.second)).toMutableList())
+                while (currentHeight < 9) {
+                    val tmp = mutableSetOf<MutableList<Pair<Int, Int>>>()
+                    currentPathsTmp.forEachIndexed loop@{ index, inner ->
+                        if (inner.size < currentHeight + 1) {
+                            return@loop
+                        }
+                        if (inner[currentHeight].first + 1 < lastRow && rawText[inner[currentHeight].first + 1][inner[currentHeight].second].digitToInt() == currentHeight + 1) {
+//                            tmp[index].add(Pair(inner[currentHeight].first + 1, inner[currentHeight].second))
+                            val newList = inner.toMutableList()
+                            newList.add(Pair(inner[currentHeight].first + 1, inner[currentHeight].second))
+                            tmp.addAll(listOf(newList))
+                        }
+                        if (inner[currentHeight].first - 1 >= 0 && rawText[inner[currentHeight].first - 1][inner[currentHeight].second].digitToInt() == currentHeight + 1) {
+//                            tmp.add(Pair(inner[currentHeight].first - 1, inner[currentHeight].second))
+                            val newList = inner.toMutableList()
+                            newList.add(Pair(inner[currentHeight].first - 1, inner[currentHeight].second))
+                            tmp.addAll(listOf(newList))
+                        }
+                        if (inner[currentHeight].second + 1 < lastColumn && rawText[inner[currentHeight].first][inner[currentHeight].second + 1].digitToInt() == currentHeight + 1) {
+//                            tmp.add(Pair(inner[currentHeight].first, inner[currentHeight].second + 1))
+                            val newList = inner.toMutableList()
+                            newList.add(Pair(inner[currentHeight].first, inner[currentHeight].second + 1))
+                            tmp.addAll(listOf(newList))
+                        }
+                        if (inner[currentHeight].second - 1 >= 0 && rawText[inner[currentHeight].first][inner[currentHeight].second - 1].digitToInt() == currentHeight + 1) {
+//                            tmp.add(Pair(inner[currentHeight].first, inner[currentHeight].second - 1))
+                            val newList = inner.toMutableList()
+                            newList.add(Pair(inner[currentHeight].first, inner[currentHeight].second - 1))
+                            tmp.addAll(listOf(newList))
+                        }
+                    }
+//                    currentPaths = tmp.toMutableSet()
+                    currentPathsTmp.addAll(tmp)
+                    currentPathsTmp = currentPathsTmp.filter { it.size == currentHeight + 2 }.toMutableSet()
+                    currentHeight++
+                }
+                currentPaths.addAll(currentPathsTmp)
+//                result += currentPaths.size
+            }
+            println("2024 day 10.2: ${currentPaths.size}")
         }
 
         fun test() {
@@ -826,8 +925,8 @@ class Advent2024 {
 //            day8_2()
 //            day9_1()
 //            day9_2()
-            day10_1()
-//            day10_2()
+//            day10_1()
+            day10_2()
 //            day11_1()
 //            day11_2()
 //            day12_1()
