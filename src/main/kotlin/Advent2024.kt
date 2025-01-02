@@ -840,7 +840,6 @@ class Advent2024 {
         fun day10_2() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day10.txt").readLines()
-            var result = 0
             val currentPositions = mutableListOf<Pair<Int, Int>>()
             val currentPaths = mutableSetOf<MutableList<Pair<Int, Int>>>()
             rawText.forEachIndexed { indexLine, line ->
@@ -863,25 +862,21 @@ class Advent2024 {
                             return@loop
                         }
                         if (inner[currentHeight].first + 1 < lastRow && rawText[inner[currentHeight].first + 1][inner[currentHeight].second].digitToInt() == currentHeight + 1) {
-//                            tmp[index].add(Pair(inner[currentHeight].first + 1, inner[currentHeight].second))
                             val newList = inner.toMutableList()
                             newList.add(Pair(inner[currentHeight].first + 1, inner[currentHeight].second))
                             tmp.addAll(listOf(newList))
                         }
                         if (inner[currentHeight].first - 1 >= 0 && rawText[inner[currentHeight].first - 1][inner[currentHeight].second].digitToInt() == currentHeight + 1) {
-//                            tmp.add(Pair(inner[currentHeight].first - 1, inner[currentHeight].second))
                             val newList = inner.toMutableList()
                             newList.add(Pair(inner[currentHeight].first - 1, inner[currentHeight].second))
                             tmp.addAll(listOf(newList))
                         }
                         if (inner[currentHeight].second + 1 < lastColumn && rawText[inner[currentHeight].first][inner[currentHeight].second + 1].digitToInt() == currentHeight + 1) {
-//                            tmp.add(Pair(inner[currentHeight].first, inner[currentHeight].second + 1))
                             val newList = inner.toMutableList()
                             newList.add(Pair(inner[currentHeight].first, inner[currentHeight].second + 1))
                             tmp.addAll(listOf(newList))
                         }
                         if (inner[currentHeight].second - 1 >= 0 && rawText[inner[currentHeight].first][inner[currentHeight].second - 1].digitToInt() == currentHeight + 1) {
-//                            tmp.add(Pair(inner[currentHeight].first, inner[currentHeight].second - 1))
                             val newList = inner.toMutableList()
                             newList.add(Pair(inner[currentHeight].first, inner[currentHeight].second - 1))
                             tmp.addAll(listOf(newList))
@@ -893,9 +888,103 @@ class Advent2024 {
                     currentHeight++
                 }
                 currentPaths.addAll(currentPathsTmp)
-//                result += currentPaths.size
             }
             println("2024 day 10.2: ${currentPaths.size}")
+        }
+
+        fun day11_1() { // 199753
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day11.txt").readText()
+            var stoneArray = rawText.split(" ").map { it.toLong() }.toMutableList()
+            var blinks = 25
+            while (blinks > 0) {
+                val stoneArrayTmp = mutableListOf<Long>()
+                stoneArray.forEachIndexed loop@{ index, s ->
+                    if (s == 0L) {
+                        stoneArrayTmp.add(1)
+                        return@loop
+                    }
+                    if (s.toString().length % 2 == 0) {
+                        stoneArrayTmp.add(s.toString().substring(0, s.toString().length / 2).toLong())
+                        stoneArrayTmp.add(s.toString().substring(s.toString().length / 2).toLong())
+                        return@loop
+                    }
+                    stoneArrayTmp.add(s * 2024)
+                }
+                stoneArray = stoneArrayTmp.toMutableList()
+                blinks--
+            }
+            println("2024 day 11.1: ${stoneArray.size}")
+        }
+
+        fun day11_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day11.txt").readText()
+            val stoneArray = rawText.split(" ").map { it.toLong() }.toList()
+            var counter = sortedMapOf<Long, Long>()
+            stoneArray.forEach {
+                counter[it] = 1
+            }
+            var blinks = 75
+            while (blinks > 0) {
+                print("$blinks,")
+                var counterTmp = sortedMapOf<Long, Long>()
+                counter.forEach { key, value ->
+                    if (key == 0L) {
+                        counterTmp[1] = value
+                    } else if (key.toString().length % 2 == 0) {
+                        val newKey1 = key.toString().substring(0, key.toString().length / 2).toLong()
+                        val newKey2 = key.toString().substring(key.toString().length / 2).toLong()
+                        if (counterTmp.containsKey(newKey1)) {
+                            counterTmp[newKey1] = counterTmp[newKey1]?.plus(value)
+                        } else {
+                            counterTmp[newKey1] = value
+                        }
+                        if (counterTmp.containsKey(newKey2)) {
+                            counterTmp[newKey2] = counterTmp[newKey2]?.plus(value)
+                        } else {
+                            counterTmp[newKey2] = value
+                        }
+                    } else {
+                        val newKey = key * 2024
+                        if (counterTmp.containsKey(newKey)) {
+                            counterTmp[newKey] = counterTmp[newKey]?.plus(value)
+                        } else {
+                            counterTmp[newKey] = value
+                        }
+                    }
+                }
+                counter = counterTmp.toSortedMap()
+                blinks--
+            }
+            println("")
+            println(counter.values.sum())
+//            while (blinks > 0) {
+//                val stoneArrayTmp = mutableListOf<Long>()
+//                stoneArray.forEachIndexed loop@{ index, s ->
+//                    if (s == 0L) {
+//                        stoneArrayTmp.add(1)
+//                        return@loop
+//                    }
+//                    if (s.toString().length % 2 == 0) {
+//                        stoneArrayTmp.add(s.toString().substring(0, s.toString().length / 2).toLong())
+//                        stoneArrayTmp.add(s.toString().substring(s.toString().length / 2).toLong())
+//                        return@loop
+//                    }
+//                    stoneArrayTmp.add(s * 2024)
+//                }
+//                stoneArrayTmp.addAll(stoneArray)
+//                val currentMap = stoneArrayTmp.groupBy { it }
+//
+//                stoneArray = stoneArrayTmp.toMutableSet()
+//                blinks--
+//            }
+//            println(stoneArray.groupBy { it }.filter { it.value.size > 1 }.size)
+//            stoneArray.groupBy { it }.filter { it.value.size > 1 }.forEach {
+//                println(it.value.size)
+//            }
+//            println(stoneArray.groupBy { it }.filter { it.value.size == 1 }.size)
+//            println("2024 day 11.2: ${stoneArray.size}")
         }
 
         fun test() {
@@ -926,9 +1015,9 @@ class Advent2024 {
 //            day9_1()
 //            day9_2()
 //            day10_1()
-            day10_2()
+//            day10_2()
 //            day11_1()
-//            day11_2()
+            day11_2()
 //            day12_1()
 //            day12_2()
 //            day13_1()
