@@ -917,7 +917,7 @@ class Advent2024 {
             println("2024 day 11.1: ${stoneArray.size}")
         }
 
-        fun day11_2() {
+        fun day11_2() { // 239413123020116
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day11.txt").readText()
             val stoneArray = rawText.split(" ").map { it.toLong() }.toList()
@@ -927,7 +927,6 @@ class Advent2024 {
             }
             var blinks = 75
             while (blinks > 0) {
-                print("$blinks,")
                 var counterTmp = sortedMapOf<Long, Long>()
                 counter.forEach { key, value ->
                     if (key == 0L) {
@@ -957,34 +956,235 @@ class Advent2024 {
                 counter = counterTmp.toSortedMap()
                 blinks--
             }
-            println("")
-            println(counter.values.sum())
-//            while (blinks > 0) {
-//                val stoneArrayTmp = mutableListOf<Long>()
-//                stoneArray.forEachIndexed loop@{ index, s ->
-//                    if (s == 0L) {
-//                        stoneArrayTmp.add(1)
-//                        return@loop
-//                    }
-//                    if (s.toString().length % 2 == 0) {
-//                        stoneArrayTmp.add(s.toString().substring(0, s.toString().length / 2).toLong())
-//                        stoneArrayTmp.add(s.toString().substring(s.toString().length / 2).toLong())
-//                        return@loop
-//                    }
-//                    stoneArrayTmp.add(s * 2024)
-//                }
-//                stoneArrayTmp.addAll(stoneArray)
-//                val currentMap = stoneArrayTmp.groupBy { it }
-//
-//                stoneArray = stoneArrayTmp.toMutableSet()
-//                blinks--
-//            }
-//            println(stoneArray.groupBy { it }.filter { it.value.size > 1 }.size)
-//            stoneArray.groupBy { it }.filter { it.value.size > 1 }.forEach {
-//                println(it.value.size)
-//            }
-//            println(stoneArray.groupBy { it }.filter { it.value.size == 1 }.size)
-//            println("2024 day 11.2: ${stoneArray.size}")
+            println("2024 day 11.2: ${counter.values.sum()}")
+        }
+
+        fun day12_1() { // 1494342
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day12.txt").readLines()
+
+            fun calcPerimeter(line: Int, column: Int): Int {
+                var perimeter = 0
+                val currentChar = rawText[line][column].toString()
+                if (line > 0) {
+                    if (rawText[line - 1][column].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                if (line < (rawText.size - 1)) {
+                    if (rawText[line + 1][column].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                if (column > 0) {
+                    if (rawText[line][column - 1].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                if (column < (rawText[0].length - 1)) {
+                    if (rawText[line][column + 1].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                return perimeter
+            }
+
+            val allPath = mutableSetOf<MutableSet<Pair<Pair<Int, Int>, Int>>>()
+            fun findPath(line: Int, column: Int, path: MutableSet<Pair<Pair<Int, Int>, Int>>) {
+                val perimeter = calcPerimeter(line, column)
+                if (!path.contains(Pair(Pair(line, column), perimeter))) {
+                    path.add(Pair(Pair(line, column), perimeter))
+                    val char = rawText[line][column]
+                    if (line < rawText.size - 1 && rawText[line + 1][column] == char) {
+                        findPath(line + 1, column, path)
+                    }
+                    if (line > 0 && rawText[line - 1][column] == char) {
+                        findPath(line - 1, column, path)
+                    }
+                    if (column < rawText[0].length - 1 && rawText[line][column + 1] == char) {
+                        findPath(line, column + 1, path)
+                    }
+                    if (column > 0 && rawText[line][column - 1] == char) {
+                        findPath(line, column - 1, path)
+                    }
+                }
+            }
+
+            rawText.forEachIndexed { line, s ->
+                s.forEachIndexed { column, _ ->
+                    val perimeter = calcPerimeter(line, column)
+                    if (allPath.none { it.contains(Pair(Pair(line, column), perimeter)) }) {
+                        val path = mutableSetOf<Pair<Pair<Int, Int>, Int>>()
+                        findPath(line, column, path)
+                        allPath.add(path)
+                    }
+                }
+            }
+
+            var result = 0
+            allPath.forEach { path ->
+                val area = path.size
+                val perimeter = path.sumOf { it.second }
+                result += area * perimeter
+            }
+            println("2024 day 12.1: $result")
+        }
+
+        fun day12_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day12.txt").readLines()
+
+            fun calcPerimeter(line: Int, column: Int): Int {
+                var perimeter = 0
+                val currentChar = rawText[line][column].toString()
+                if (line > 0) {
+                    if (rawText[line - 1][column].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                if (line < (rawText.size - 1)) {
+                    if (rawText[line + 1][column].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                if (column > 0) {
+                    if (rawText[line][column - 1].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                if (column < (rawText[0].length - 1)) {
+                    if (rawText[line][column + 1].toString() != currentChar) {
+                        perimeter++
+                    }
+                } else {
+                    perimeter++
+                }
+                return perimeter
+            }
+
+            val allPath = mutableSetOf<MutableSet<Pair<Pair<Int, Int>, Int>>>()
+            fun findPath(line: Int, column: Int, path: MutableSet<Pair<Pair<Int, Int>, Int>>) {
+                val perimeter = calcPerimeter(line, column)
+                if (!path.contains(Pair(Pair(line, column), perimeter))) {
+                    path.add(Pair(Pair(line, column), perimeter))
+                    val char = rawText[line][column]
+                    if (line < rawText.size - 1 && rawText[line + 1][column] == char) {
+                        findPath(line + 1, column, path)
+                    }
+                    if (line > 0 && rawText[line - 1][column] == char) {
+                        findPath(line - 1, column, path)
+                    }
+                    if (column < rawText[0].length - 1 && rawText[line][column + 1] == char) {
+                        findPath(line, column + 1, path)
+                    }
+                    if (column > 0 && rawText[line][column - 1] == char) {
+                        findPath(line, column - 1, path)
+                    }
+                }
+            }
+
+            rawText.forEachIndexed { line, s ->
+                s.forEachIndexed { column, _ ->
+                    val perimeter = calcPerimeter(line, column)
+                    if (allPath.none { it.contains(Pair(Pair(line, column), perimeter)) }) {
+                        val path = mutableSetOf<Pair<Pair<Int, Int>, Int>>()
+                        findPath(line, column, path)
+                        allPath.add(path)
+                    }
+                }
+            }
+
+            fun getSequences(list: List<Int>): List<List<Int>> {
+                val sequences = mutableListOf<MutableList<Int>>()
+                var currentSequence = mutableListOf<Int>()
+                list.forEachIndexed loop@{ index, it ->
+                    if (currentSequence.isEmpty() || currentSequence.last() == it - 1) {
+                        currentSequence.add(it)
+                    } else {
+                        sequences.add(currentSequence)
+                        currentSequence = mutableListOf()
+                        currentSequence.add(it)
+                    }
+
+                    if (index == list.size - 1) {
+                        sequences.add(currentSequence)
+                    }
+                }
+                return sequences.toList()
+            }
+
+            var result = 0
+            allPath.forEach { path ->
+                var sides = 0
+                val cleanedPath = path.map { it.first }.sortedBy { it.second }.sortedBy { it.first }
+                val char = rawText[path.first().first.first][path.first().first.second]
+
+                val linesY = cleanedPath.groupBy { it.first }.keys
+                linesY.forEach { line ->
+                    val sub = cleanedPath.filter { it.first == line }
+                    val list = sub.map { it.second }
+                    val sequences = getSequences(list)
+                    sequences.forEach { sequence ->
+                        if (line == 0) {
+                            sides += 1
+                        } else {
+                            val noCharIndex = sequence.filter { rawText[line - 1][it] != char }
+                            val sequencesTmp = getSequences(noCharIndex.sorted())
+                            sides += sequencesTmp.size
+                        }
+
+                        if (line == rawText.size - 1) {
+                            sides += 1
+                        } else {
+                            val noCharIndex = sequence.filter { rawText[line + 1][it] != char }
+                            val sequencesTmp = getSequences(noCharIndex.sorted())
+                            sides += sequencesTmp.size
+                        }
+                    }
+                }
+
+                val linesX = cleanedPath.groupBy { it.second }.keys
+                linesX.forEach { line ->
+                    val sub = cleanedPath.filter { it.second == line }
+                    val list = sub.map { it.first }
+                    val sequences = getSequences(list)
+                    sequences.forEach { sequence ->
+                        if (line == 0) {
+                            sides += 1
+                        } else {
+                            val noCharIndex = sequence.filter { rawText[it][line - 1] != char }
+                            val sequencesTmp = getSequences(noCharIndex.sorted())
+                            sides += sequencesTmp.size
+                        }
+
+                        if (line == rawText[0].length - 1) {
+                            sides += 1
+                        } else {
+                            val noCharIndex = sequence.filter { rawText[it][line + 1] != char }
+                            val sequencesTmp = getSequences(noCharIndex.sorted())
+                            sides += sequencesTmp.size
+                        }
+                    }
+                }
+
+                result += path.size * sides
+            }
+//            println("sides: $sides")
+            println("2024 day 12.2: $result")
         }
 
         fun test() {
@@ -1017,9 +1217,9 @@ class Advent2024 {
 //            day10_1()
 //            day10_2()
 //            day11_1()
-            day11_2()
+//            day11_2()
 //            day12_1()
-//            day12_2()
+            day12_2()
 //            day13_1()
 //            day13_2()
 //            day14_1()
