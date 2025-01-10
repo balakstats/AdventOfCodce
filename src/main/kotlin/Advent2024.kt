@@ -1180,11 +1180,94 @@ class Advent2024 {
                         }
                     }
                 }
-
                 result += path.size * sides
             }
-//            println("sides: $sides")
             println("2024 day 12.2: $result")
+        }
+
+        fun day13_1() { // 37901
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day13.txt").readText()
+            val array = rawText.split("\r\n\r\n")
+            val tokenA = 3
+            val tokenB = 1
+            var result = 0L
+
+            array.forEach {
+                val split = it.split("\r\n")
+                var x = split[2].split(":")[1].split(",")[0].split("=")[1].toLong()
+                var y = split[2].split(":")[1].split(",")[1].split("=")[1].toLong()
+                val stepXA = split[0].split(":")[1].split(",")[0].split("+")[1].toLong()
+                val stepYA = split[0].split(":")[1].split(",")[1].split("+")[1].toLong()
+                val stepXB = split[1].split(":")[1].split(",")[0].split("+")[1].toLong()
+                val stepYB = split[1].split(":")[1].split(",")[1].split("+")[1].toLong()
+                var i = 0L
+                val tmp = mutableSetOf<Pair<Long, Long>>()
+
+                if (x % stepXA == 0L && y % stepYA == 0L) {
+                    if (x / stepXA == y / stepYA) {
+                        tmp.add(Pair(x / stepXA, 0L))
+                    }
+                }
+
+                if (x % stepXB == 0L && y % stepYB == 0L) {
+                    if (x / stepXB == y / stepYB) {
+                        tmp.add(Pair(0L, y / stepYB))
+                    }
+                }
+
+                while (x > stepXA && y > stepYA) {
+                    i++
+                    x -= stepXA
+                    y -= stepYA
+                    if (x % stepXB == 0L && stepYB * (x / stepXB) == y) {
+                        println("A:$i")
+                        println("B:${x / stepXB}")
+                        tmp.add(Pair(i, x / stepXB))
+                    }
+                }
+                val resultList = mutableSetOf<Long>()
+                tmp.forEach { pair ->
+                    resultList.add(pair.first * tokenA + (pair.second * tokenB))
+                }
+                if (resultList.isNotEmpty()) {
+                    result += resultList.sorted().first()
+                }
+            }
+            println("2024 day 13.1: $result")
+        }
+
+        fun day13_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day13.txt").readText()
+            val array = rawText.split("\r\n\r\n")
+            val tokenA = 3
+            val tokenB = 1
+            var result = 0L
+
+            val extend = 10000000000000
+            array.forEach {
+                val split = it.split("\r\n")
+                val x = split[2].split(":")[1].split(",")[0].split("=")[1].toLong() + extend
+                val y = split[2].split(":")[1].split(",")[1].split("=")[1].toLong() + extend
+                val buttonAX = split[0].split(":")[1].split(",")[0].split("+")[1].toLong()
+                val buttonAY = split[0].split(":")[1].split(",")[1].split("+")[1].toLong()
+                val buttonBX = split[1].split(":")[1].split(",")[0].split("+")[1].toLong()
+                val buttonBY = split[1].split(":")[1].split(",")[1].split("+")[1].toLong()
+//                val tmp = mutableSetOf<Pair<Long, Long>>()
+
+                val first = ((x * buttonAY) - (y * buttonAX))
+                val second = ((-buttonBY * buttonAX) + (buttonBX * buttonAY))
+                if (first % second == 0L) {
+                    val pressA = first / second
+                    val third = (x - (pressA * buttonBX))
+                    if (third % buttonAX == 0L) {
+                        val pressB = third / buttonAX
+                        result += (pressA*tokenB) + (pressB*tokenA)
+                    }
+                }
+            }
+            println("2024 day 13.2: $result")
         }
 
         fun test() {
@@ -1219,9 +1302,9 @@ class Advent2024 {
 //            day11_1()
 //            day11_2()
 //            day12_1()
-            day12_2()
+//            day12_2()
 //            day13_1()
-//            day13_2()
+            day13_2()
 //            day14_1()
 //            day14_2()
 //            day15_1()
