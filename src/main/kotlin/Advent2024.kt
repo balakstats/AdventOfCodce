@@ -1263,11 +1263,118 @@ class Advent2024 {
                     val third = (x - (pressA * buttonBX))
                     if (third % buttonAX == 0L) {
                         val pressB = third / buttonAX
-                        result += (pressA*tokenB) + (pressB*tokenA)
+                        result += (pressA * tokenB) + (pressB * tokenA)
                     }
                 }
             }
             println("2024 day 13.2: $result")
+        }
+
+        fun day14_1() { // 211692000
+            val robots: MutableList<Pair<Pair<Int, Int>, Pair<Int, Int>>> =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day14.txt").readLines()
+                    .map {
+                        Pair(
+                            Pair(
+                                it.split(" ")[0].split("=")[1].split(",")[0].toInt(),
+                                it.split(" ")[0].split("=")[1].split(",")[1].toInt()
+                            ),
+                            Pair(
+                                it.split(" ")[1].split("=")[1].split(",")[0].toInt(),
+                                it.split(" ")[1].split("=")[1].split(",")[1].toInt()
+                            )
+                        )
+                    }.toMutableList()
+            val width = 101
+            val height = 103
+            for (range in 0..<robots.size) {
+                for (second in 0..99) {
+                    val newPosition = Pair(
+                        (robots[range].first.first + robots[range].second.first).mod(width),
+                        (robots[range].first.second + robots[range].second.second).mod(height)
+                    )
+                    robots[range] = Pair(newPosition, Pair(robots[range].second.first, robots[range].second.second))
+                }
+            }
+            val firstQuadrant =
+                robots.filter { it.first.first < (width / 2) && it.first.second < (height / 2) }.size.toLong()
+            val secondQuadrant =
+                robots.filter { it.first.first > (width / 2) && it.first.second < (height / 2) }.size.toLong()
+            val thirdQuadrant =
+                robots.filter { it.first.first < (width / 2) && it.first.second > (height / 2) }.size.toLong()
+            val fourthQuadrant =
+                robots.filter { it.first.first > (width / 2) && it.first.second > (height / 2) }.size.toLong()
+            val result = firstQuadrant * secondQuadrant * thirdQuadrant * fourthQuadrant
+            println("2024 day 14.1: $result")
+        }
+
+        fun day14_2() { // 6587
+            fun drawRobots(robots: MutableList<Pair<Pair<Int, Int>, Pair<Int, Int>>>) {
+                val sortedRobots = robots.sortedBy { it.first.first }.sortedBy { it.first.second }
+                val lines = mutableListOf<String>()
+                println(sortedRobots)
+                sortedRobots.forEach loop@{
+                    val lineIndex = it.first.second
+                    val line =
+                        "....................................................................................................."
+                    if (lines.isEmpty() || lineIndex == lines.size) {
+                        lines.add(line)
+                    }
+                    if (lines.size < lineIndex) {
+                        lines.add(line)
+                        return@loop
+                    }
+                    val first = if (it.first.first > 0) lines[lineIndex].substring(0, it.first.first) else ""
+                    val second = if (it.first.first < 101) lines[lineIndex].substring(it.first.first + 1) else ""
+                    val tmp = "${first}1$second"
+                    lines[lineIndex] = tmp
+                }
+
+                lines.forEachIndexed { index, s ->
+                    println("$index: $s")
+                }
+                println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            }
+
+            val robots: MutableList<Pair<Pair<Int, Int>, Pair<Int, Int>>> =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day14.txt").readLines()
+                    .map {
+                        Pair(
+                            Pair(
+                                it.split(" ")[0].split("=")[1].split(",")[0].toInt(),
+                                it.split(" ")[0].split("=")[1].split(",")[1].toInt()
+                            ),
+                            Pair(
+                                it.split(" ")[1].split("=")[1].split(",")[0].toInt(),
+                                it.split(" ")[1].split("=")[1].split(",")[1].toInt()
+                            )
+                        )
+                    }.toMutableList()
+
+            val width = 101
+            val height = 103
+            var result = 0
+            run loop@{
+                for (second in 0..999999999) {
+                    for (range in 0..<robots.size) {
+                        val newPosition = Pair(
+                            (robots[range].first.first + robots[range].second.first).mod(width),
+                            (robots[range].first.second + robots[range].second.second).mod(height)
+                        )
+                        robots[range] = Pair(newPosition, Pair(robots[range].second.first, robots[range].second.second))
+                    }
+                    val robotsList = robots.map { it.first }
+                    val robotsSet = robots.map { it.first }.toSet()
+                    // !! third time the if statement is entered is the correct one
+                    if (robotsList.size == robotsSet.size) { // additional condition needed like variance: https://www.reddit.com/r/adventofcode/comments/1hts3v2/2024_day_14_part_2_c_how_to_find_the_tree_via/
+//                        drawRobots(robots)
+                        result = second + 1
+                        return@loop
+                    }
+                }
+            }
+
+            println("2024 day 14.2: $result")
         }
 
         fun test() {
@@ -1304,9 +1411,9 @@ class Advent2024 {
 //            day12_1()
 //            day12_2()
 //            day13_1()
-            day13_2()
+//            day13_2()
 //            day14_1()
-//            day14_2()
+            day14_2()
 //            day15_1()
 //            day15_2()
 //            day16_1()
