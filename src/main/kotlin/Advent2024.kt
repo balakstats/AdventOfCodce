@@ -3,7 +3,10 @@ import Utils.Companion.isReportSafe
 import Utils.Companion.readIntCsv
 import Utils.Companion.readStringCsv
 import java.io.File
+import java.util.stream.IntStream
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.pow
 
 class Advent2024 {
@@ -1377,6 +1380,208 @@ class Advent2024 {
             println("2024 day 14.2: $result")
         }
 
+        fun day15_1() { // 1448589
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day15.txt").readLines()
+                    .filter { it.startsWith("#") }.toMutableList()
+            val commands =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day15.txt").readText()
+                    .split("\r\n\r\n")[1].replace("\r\n", "")
+
+            var x = map.first { it.contains("@") }.indexOfFirst { it == '@' }
+            var y = IntStream.range(1, map.size).filter { map[it].contains("@") }.findFirst().asInt
+            commands.forEach command@{ c ->
+                val tmpX = when (c) {
+                    '<' -> -1
+                    '>' -> 1
+                    else -> 0
+                }
+                val tmpY = when (c) {
+                    '^' -> -1
+                    'v' -> 1
+                    else -> 0
+                }
+                if (tmpX == 0 && tmpY == 0) {
+                    println("ERROR")
+                }
+
+                if (map[y + tmpY][x + tmpX] == '#') {
+                    println(map)
+                    return@command
+                } else if (map[y + tmpY][x + tmpX] == '.') {
+                    map[y] = map[y].toCharArray().also { it[x] = '.' }.joinToString("")
+                    map[y + tmpY] = map[y + tmpY].toCharArray().also { it[x + tmpX] = '@' }.joinToString("")
+                    x += tmpX
+                    y += tmpY
+                    println(map)
+                    return@command
+                } else {
+                    var i = 1
+                    while (true) {
+                        i++
+                        if (map[y + (tmpY * i)][x + (tmpX * i)] == 'O') {
+                            continue
+                        } else if (map[y + (tmpY * i)][x + (tmpX * i)] == '#') {
+                            break
+                        } else {
+                            map[y] = map[y].toCharArray().also { it[x] = '.' }.joinToString("")
+                            map[y + tmpY] = map[y + tmpY].toCharArray().also { it[x + tmpX] = '@' }.joinToString("")
+                            map[y + (tmpY * i)] =
+                                map[y + (tmpY * i)].toCharArray().also { it[x + (tmpX * i)] = 'O' }.joinToString("")
+                            x += tmpX
+                            y += tmpY
+                            break
+                        }
+                    }
+                    println(map)
+                }
+            }
+
+            var result = 0
+            map.forEachIndexed outer@{ line, s ->
+                if (line == 0) {
+                    return@outer
+                }
+                s.forEachIndexed inner@{ index, c ->
+                    if (c != 'O') {
+                        return@inner
+                    }
+
+                    result += (100 * line) + index
+                }
+            }
+
+            println("2024 day 15.1: $result")
+        }
+
+        fun day15_2() {
+            val commands =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day15.txt").readText()
+                    .split("\r\n\r\n")[1].replace("\r\n", "")
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day15.txt").readLines()
+                    .filter { it.startsWith("#") }
+                    .map { it.replace("#", "##").replace(".", "..").replace("@", "@.").replace("O", "[]") }
+                    .toMutableList()
+            var x = map.first { it.contains("@") }.indexOfFirst { it == '@' }
+            var y = IntStream.range(1, map.size).filter { map[it].contains("@") }.findFirst().asInt
+            val height = map.size
+            val width = map[0].length
+
+            commands.forEach command@{ c ->
+                val tmpX = when (c) {
+                    '<' -> -1
+                    '>' -> 1
+                    else -> 0
+                }
+                val tmpY = when (c) {
+                    '^' -> -1
+                    'v' -> 1
+                    else -> 0
+                }
+                if (tmpX == 0 && tmpY == 0) {
+                    println("ERROR")
+                }
+
+                if (map[y + tmpY][x + tmpX] == '#') {
+                    println(map)
+                    return@command
+                } else if (map[y + tmpY][x + tmpX] == '.') {
+                    map[y] = map[y].toCharArray().also { it[x] = '.' }.joinToString("")
+                    map[y + tmpY] = map[y + tmpY].toCharArray().also { it[x + tmpX] = '@' }.joinToString("")
+                    x += tmpX
+                    y += tmpY
+                    println(map)
+                    return@command
+                } else {
+                    if (tmpX != 0) {
+                        var i = 3
+                        while ((x + (tmpX * i) in 1..<width) && (map[y][x + (tmpX * i)] != '.' && map[y][x + (tmpX * i)] != '#')) {
+                            i += 2
+                        }
+                        if ((x + (tmpX * i) < 0) || (x + (tmpX * i) >= width) || map[y][x + (tmpX * i)] == '#') {
+                            return@command
+                        }
+
+                        map[y] = map[y].toCharArray().also { it[x] = '.' }.joinToString("")
+                        map[y] = map[y].toCharArray().also { it[x + tmpX] = '@' }.joinToString("")
+                        var toggle = if (tmpX > 0) ']' else '['
+                        while (i > 1) {
+                            map[y] = map[y].toCharArray().also { it[x + (tmpX * i)] = toggle }.joinToString("")
+                            toggle = if (toggle == ']') '[' else ']'
+                            i--
+                        }
+                    } else {
+                        var toBeMoved = mutableSetOf<Pair<Int, Pair<Int, Int>>>()
+                        toBeMoved.add(Pair(y + tmpY, Pair(x, if (map[y + tmpY][x] == '[') x + 1 else x - 1)))
+                        var i = 1
+                        while (true) {
+                            val tmp = mutableSetOf<Pair<Int, Pair<Int, Int>>>()
+                            toBeMoved.filter { first -> first.first == (y + (tmpY * i)) }.forEach filteredInner@{ p ->
+                                if (map[y + (tmpY * (i + 1))][p.second.first] == '#') return@command
+                                if (map[y + (tmpY * (i + 1))][p.second.second] == '#') return@command
+
+                                if (map[y + (tmpY * (i + 1))][p.second.first] == '['){
+                                    tmp.add(Pair(y  + (tmpY * (i + 1)),Pair(p.second.first,p.second.first + 1)))
+                                }
+                                if (map[y + (tmpY * (i + 1))][p.second.first] == ']'){
+                                    tmp.add(Pair(y  + (tmpY * (i + 1)),Pair(p.second.first,p.second.first - 1)))
+                                }
+                                if (map[y + (tmpY * (i + 1))][p.second.second] == '['){
+                                    tmp.add(Pair(y + (tmpY * (i + 1)),Pair(p.second.second,p.second.second + 1)))
+                                }
+                                if (map[y + (tmpY * (i + 1))][p.second.second] == ']'){
+                                    tmp.add(Pair(y + (tmpY * (i + 1)),Pair(p.second.second,p.second.second - 1)))
+                                }
+                            }
+                            if(tmp.isEmpty()){
+                                break
+                            }
+                            toBeMoved.addAll(tmp)
+                            i++
+                        }
+                        println("move")
+                        toBeMoved = if(c == '^'){
+                            toBeMoved.sortedBy { it.first }.toMutableSet()
+                        } else {
+                            toBeMoved.sortedByDescending { it.first }.toMutableSet()
+                        }
+                        toBeMoved.forEach { pair ->
+                            map[pair.first] = map[pair.first].toCharArray().also { it[pair.second.first] = '.' }.joinToString("")
+                            map[pair.first] = map[pair.first].toCharArray().also { it[pair.second.second] = '.' }.joinToString("")
+                            map[pair.first + tmpY] = map[pair.first + tmpY].toCharArray().also { it[min(pair.second.first,pair.second.second)] = '[' }.joinToString("")
+                            map[pair.first + tmpY] = map[pair.first + tmpY].toCharArray().also { it[max(pair.second.first,pair.second.second)] = ']' }.joinToString("")
+                        }
+                        map[y] = map[y].toCharArray().also { it[x] = '.' }.joinToString("")
+                        map[y + tmpY] = map[y + tmpY].toCharArray().also { it[x] = '@' }.joinToString("")
+                    }
+                    x += tmpX
+                    y += tmpY
+                }
+
+                map.forEach {
+                    println(it)
+                }
+                println("++++++++++++++++++++++++++++")
+            }
+
+            var result = 0
+            map.forEachIndexed outer@{ line, s ->
+                if (line == 0) {
+                    return@outer
+                }
+                s.forEachIndexed inner@{ index, c ->
+                    if (c != '[') {
+                        return@inner
+                    }
+
+                    result += (100 * line) + index
+                }
+            }
+
+            println("2024 day 15.2: $result")
+        }
+
         fun test() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
@@ -1413,9 +1618,9 @@ class Advent2024 {
 //            day13_1()
 //            day13_2()
 //            day14_1()
-            day14_2()
+//            day14_2()
 //            day15_1()
-//            day15_2()
+            day15_2()
 //            day16_1()
 //            day16_2()
 //            day17_1()
