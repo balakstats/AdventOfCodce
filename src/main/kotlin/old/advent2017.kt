@@ -1,4 +1,7 @@
+package old
+
 import java.io.File
+import kotlin.math.abs
 
 class Advent2017 {
     companion object {

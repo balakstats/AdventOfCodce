@@ -1,3 +1,5 @@
+package old
+
 import java.io.File
 
 class Advent2015 {
@@ -10,7 +12,7 @@ class Advent2015 {
             val up = rawText.split("(").size - 1
             val down = rawText.split(")").size - 1
 
-            println("2015 day 01.1: ${up - down}")
+            print("2015 day 01.1: ${up - down}, ")
         }
 
         fun day1_2() { // 1797
@@ -26,7 +28,7 @@ class Advent2015 {
                     result = index
                 }
             }
-            println("2015 day 01.2: $result")
+            print("2015 day 01.2: $result, ")
         }
 
         fun day2_1() {
@@ -41,7 +43,7 @@ class Advent2015 {
                 val smallest = listOf(surface1, surface2, surface3).sorted()[0] / 2
                 result += surface1 + surface2 + surface3 + smallest
             }
-            println("2015 day 02.1: $result")
+            print("2015 day 02.1: $result, ")
         }
 
         fun day2_2() {
@@ -62,7 +64,7 @@ class Advent2015 {
                 result += sorted[0] + sorted[0] + sorted[1] + sorted[1]
                 result += x * y * z
             }
-            println("2015 day 02.2: $result")
+            print("2015 day 02.2: $result, ")
         }
 
         fun advent2015() {
