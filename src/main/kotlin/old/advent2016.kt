@@ -35,11 +35,8 @@ class Advent2016 {
 
             var x = 0
             var y = 0
-
             var orientation = 0
             var blocks: Int
-            var resultX = 0
-            var resultY = 0
             val mySet = mutableSetOf<Pair<Int, Int>>()
             mySet.add(Pair(y, x))
             run outer@{
@@ -52,9 +49,6 @@ class Advent2016 {
                                 val size = mySet.size
                                 mySet.add(Pair(++y, x))
                                 if (size == mySet.size) {
-                                    resultX = x
-                                    resultY = y
-                                    println("break 1")
                                     return@outer
                                 }
                             }
@@ -65,9 +59,6 @@ class Advent2016 {
                                 val size = mySet.size
                                 mySet.add(Pair(y, ++x))
                                 if (size == mySet.size) {
-                                    resultX = x
-                                    resultY = y
-                                    println("break 2")
                                     return@outer
                                 }
                             }
@@ -77,9 +68,6 @@ class Advent2016 {
                                 val size = mySet.size
                                 mySet.add(Pair(--y, x))
                                 if (size == mySet.size) {
-                                    resultX = x
-                                    resultY = y
-                                    println("break 3")
                                     return@outer
                                 }
                             }
@@ -89,27 +77,15 @@ class Advent2016 {
                                 val size = mySet.size
                                 mySet.add(Pair(y, --x))
                                 if (size == mySet.size) {
-                                    resultX = x
-                                    resultY = y
-                                    println("break 4")
                                     return@outer
                                 }
                             }
                         }
                     }
-//                    println(Pair(y, x))
-//                    val size = mySet.size
-//                    mySet.add(Pair(y, x))
-//                    if (size == mySet.size) {
-//                        resultX = x
-//                        resultY = y
-//                        println("break")
-//                        return@outer
-//                    }
                 }
             }
 
-            println("2016 day 01.2: ${abs(resultX) + abs(resultY)}")
+            println("2016 day 01.2: ${abs(x) + abs(y)}")
         }
 
         fun advent2016() {
