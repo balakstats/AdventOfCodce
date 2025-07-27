@@ -57,21 +57,37 @@ class Advent2015 {
                 val y = dimensions[1].toInt()
                 val z = dimensions[2].toInt()
                 val sorted = listOf(x, y, z).sorted()
-//                val surface1 = 2 * dimensions[0].toInt() * dimensions[1].toInt()
-//                val surface2 = 2 * dimensions[0].toInt() * dimensions[2].toInt()
-//                val surface3 = 2 * dimensions[1].toInt() * dimensions[2].toInt()
-//                val smallest = listOf(surface1,surface2,surface3).sorted()[0] / 2
                 result += sorted[0] + sorted[0] + sorted[1] + sorted[1]
                 result += x * y * z
             }
             print("2015 day 02.2: $result, ")
         }
 
+        fun day3_1() { // 2081
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day3.txt").readText()
+//            println(rawText)
+
+            val allUniqueVertices = mutableListOf<Pair<Int, Int>>()
+            allUniqueVertices.add(Pair(0,0))
+            rawText.forEach { direction ->
+                when (direction) {
+                    '^' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first,allUniqueVertices.last().second + 1))
+                    'v' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first,allUniqueVertices.last().second - 1))
+                    '>' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first + 1,allUniqueVertices.last().second))
+                    '<' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first - 1,allUniqueVertices.last().second))
+                }
+            }
+            println("raw: ${allUniqueVertices.size}")
+            println("unique: ${allUniqueVertices.toSet().size}")
+        }
+
         fun advent2015() {
-            day1_1()
-            day1_2()
-            day2_1()
-            day2_2()
+//            day1_1()
+//            day1_2()
+//            day2_1()
+//            day2_2()
+            day3_1()
         }
     }
 }
