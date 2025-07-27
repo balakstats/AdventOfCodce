@@ -3,6 +3,7 @@ import Utils.Companion.isReportSafe
 import Utils.Companion.readIntCsv
 import Utils.Companion.readStringCsv
 import java.io.File
+import java.lang.Math.floorMod
 import java.util.stream.IntStream
 import kotlin.math.abs
 import kotlin.math.max
@@ -1454,7 +1455,7 @@ class Advent2024 {
             println("2024 day 15.1: $result")
         }
 
-        fun day15_2() {
+        fun day15_2() { // 1472235
             val commands =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day15.txt").readText()
                     .split("\r\n\r\n")[1].replace("\r\n", "")
@@ -1521,36 +1522,40 @@ class Advent2024 {
                                 if (map[y + (tmpY * (i + 1))][p.second.first] == '#') return@command
                                 if (map[y + (tmpY * (i + 1))][p.second.second] == '#') return@command
 
-                                if (map[y + (tmpY * (i + 1))][p.second.first] == '['){
-                                    tmp.add(Pair(y  + (tmpY * (i + 1)),Pair(p.second.first,p.second.first + 1)))
+                                if (map[y + (tmpY * (i + 1))][p.second.first] == '[') {
+                                    tmp.add(Pair(y + (tmpY * (i + 1)), Pair(p.second.first, p.second.first + 1)))
                                 }
-                                if (map[y + (tmpY * (i + 1))][p.second.first] == ']'){
-                                    tmp.add(Pair(y  + (tmpY * (i + 1)),Pair(p.second.first,p.second.first - 1)))
+                                if (map[y + (tmpY * (i + 1))][p.second.first] == ']') {
+                                    tmp.add(Pair(y + (tmpY * (i + 1)), Pair(p.second.first, p.second.first - 1)))
                                 }
-                                if (map[y + (tmpY * (i + 1))][p.second.second] == '['){
-                                    tmp.add(Pair(y + (tmpY * (i + 1)),Pair(p.second.second,p.second.second + 1)))
+                                if (map[y + (tmpY * (i + 1))][p.second.second] == '[') {
+                                    tmp.add(Pair(y + (tmpY * (i + 1)), Pair(p.second.second, p.second.second + 1)))
                                 }
-                                if (map[y + (tmpY * (i + 1))][p.second.second] == ']'){
-                                    tmp.add(Pair(y + (tmpY * (i + 1)),Pair(p.second.second,p.second.second - 1)))
+                                if (map[y + (tmpY * (i + 1))][p.second.second] == ']') {
+                                    tmp.add(Pair(y + (tmpY * (i + 1)), Pair(p.second.second, p.second.second - 1)))
                                 }
                             }
-                            if(tmp.isEmpty()){
+                            if (tmp.isEmpty()) {
                                 break
                             }
                             toBeMoved.addAll(tmp)
                             i++
                         }
                         println("move")
-                        toBeMoved = if(c == '^'){
+                        toBeMoved = if (c == '^') {
                             toBeMoved.sortedBy { it.first }.toMutableSet()
                         } else {
                             toBeMoved.sortedByDescending { it.first }.toMutableSet()
                         }
                         toBeMoved.forEach { pair ->
-                            map[pair.first] = map[pair.first].toCharArray().also { it[pair.second.first] = '.' }.joinToString("")
-                            map[pair.first] = map[pair.first].toCharArray().also { it[pair.second.second] = '.' }.joinToString("")
-                            map[pair.first + tmpY] = map[pair.first + tmpY].toCharArray().also { it[min(pair.second.first,pair.second.second)] = '[' }.joinToString("")
-                            map[pair.first + tmpY] = map[pair.first + tmpY].toCharArray().also { it[max(pair.second.first,pair.second.second)] = ']' }.joinToString("")
+                            map[pair.first] =
+                                map[pair.first].toCharArray().also { it[pair.second.first] = '.' }.joinToString("")
+                            map[pair.first] =
+                                map[pair.first].toCharArray().also { it[pair.second.second] = '.' }.joinToString("")
+                            map[pair.first + tmpY] = map[pair.first + tmpY].toCharArray()
+                                .also { it[min(pair.second.first, pair.second.second)] = '[' }.joinToString("")
+                            map[pair.first + tmpY] = map[pair.first + tmpY].toCharArray()
+                                .also { it[max(pair.second.first, pair.second.second)] = ']' }.joinToString("")
                         }
                         map[y] = map[y].toCharArray().also { it[x] = '.' }.joinToString("")
                         map[y + tmpY] = map[y + tmpY].toCharArray().also { it[x] = '@' }.joinToString("")
@@ -1582,12 +1587,252 @@ class Advent2024 {
             println("2024 day 15.2: $result")
         }
 
-        fun test() {
-            val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
-            val result = Day07(rawText).solvePart2()
-            println(result)
+        fun day16_1() { // 160624
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day16.xxx").readLines()
+
+            val startY = map.indexOfFirst { it.contains("S") }
+            val startX = map.first { it.contains("S") }.indexOf('S')
+            val targetY = map.indexOfFirst { it.contains("E") }
+            val targetX = map.first { it.contains("E") }.indexOf('E')
+            println("x:$startX,y:$startY")
+            Path.setTarget(Pair(targetY, targetX))
+            var allPathList = mutableListOf<Path>()
+            var finished = mutableListOf<Path>()
+            allPathList.add(Path(mutableSetOf(Pair(startY, startX)), 0))
+            val eastWest = listOf(0, 2)
+            val northSouth = listOf(1, 3)
+
+            var maxDirectionChange = 0
+            var maxSteps = 0
+            while (allPathList.any { it.getState() == Path.STATE.PROCESSING }) {
+                val tmp = mutableListOf<Path>()
+
+                if (allPathList.any { it.getState() == Path.STATE.FINISHED }) {
+                    allPathList.filter { it.getState() == Path.STATE.FINISHED }.forEach {
+                        finished.add(it)
+                        if (it.getNumberOfDirectionChanged() < maxDirectionChange || maxDirectionChange == 0) {
+                            maxDirectionChange = it.getNumberOfDirectionChanged()
+                        }
+                        if (it.getNumberOfPathPoints() < maxSteps || maxSteps == 0) {
+                            maxSteps = it.getNumberOfPathPoints()
+                        }
+                    }
+                    allPathList.removeIf { it.getState() == Path.STATE.FINISHED }
+                }
+                allPathList
+                    .filter { it.getNumberOfPathPoints() > maxSteps || maxSteps == 0 }
+                    .groupBy { it.getLastPathPoint() }.forEach {
+                        if (it.value.size == 1) {
+                            tmp.add(it.value.first())
+                        } else {
+                            it.value.minByOrNull { path -> path.getNumberOfPathPoints() + (1000 * path.getNumberOfDirectionChanged()) }
+                                ?.let { it1 -> tmp.add(it1) }
+                        }
+                    }
+                allPathList = tmp
+                val tmpOuter = allPathList.listIterator()
+                while (tmpOuter.hasNext()) {
+                    val nextOuter = tmpOuter.next()
+//                    if (nextOuter.getState() == Path.STATE.FINISHED) continue
+                    val lastPathPoint = nextOuter.getLastPathPoint()
+                    val currentDirection = nextOuter.currentDirection
+                    val plusDirection = floorMod(currentDirection + 1, 4)
+                    val minusDirection = floorMod(currentDirection - 1, 4)
+                    val newY =
+                        lastPathPoint.first + (if (eastWest.contains(currentDirection)) 0 else (if (currentDirection == 1) -1 else 1))
+                    val newX =
+                        lastPathPoint.second + (if (northSouth.contains(currentDirection)) 0 else (if (currentDirection == 0) 1 else -1))
+                    val turnPlusY =
+                        lastPathPoint.first + (if (eastWest.contains(plusDirection)) 0 else (if (currentDirection == 0) -1 else 1))
+                    val turnPlusX =
+                        lastPathPoint.second + (if (northSouth.contains(plusDirection)) 0 else (if (currentDirection == 1) -1 else 1))
+                    val turnMinusY =
+                        lastPathPoint.first + (if (eastWest.contains(minusDirection)) 0 else (if (currentDirection == 0) 1 else -1))
+                    val turnMinusX =
+                        lastPathPoint.second + (if (northSouth.contains(minusDirection)) 0 else (if (currentDirection == 1) 1 else -1))
+
+                    if (map[newY][newX] != '#') {
+                        if (map[turnPlusY][turnPlusX] == '.') {
+                            val tmp1 = nextOuter.copy(
+                                pathPoints = nextOuter.pathPoints.toMutableSet(),
+                                directionChanged = nextOuter.getNumberOfDirectionChanged()
+                            )
+                            val test = tmp1.addPathPoint(Pair(turnPlusY, turnPlusX), plusDirection)
+                            if (test) tmpOuter.add(tmp1)
+
+                        }
+                        if (map[turnMinusY][turnMinusX] == '.') {
+                            val tmp2 = nextOuter.copy(
+                                pathPoints = nextOuter.pathPoints.toMutableSet(),
+                                directionChanged = nextOuter.getNumberOfDirectionChanged()
+                            )
+                            val test = tmp2.addPathPoint(Pair(turnMinusY, turnMinusX), minusDirection)
+                            if (test) tmpOuter.add(tmp2)
+
+                        }
+
+                        val test = nextOuter.addPathPoint(Pair(newY, newX), currentDirection)
+                        if (!test) tmpOuter.remove()
+                    } else {
+                        if (map[turnPlusY][turnPlusX] == '#' && map[turnMinusY][turnMinusX] == '#') {
+                            tmpOuter.remove()
+                        } else if (map[turnPlusY][turnPlusX] == '.' && map[turnMinusY][turnMinusX] == '.') {
+                            val tmp3 = nextOuter.copy(
+                                pathPoints = nextOuter.pathPoints.toMutableSet(),
+                                directionChanged = nextOuter.getNumberOfDirectionChanged()
+                            )
+                            var test = tmp3.addPathPoint(Pair(turnMinusY, turnMinusX), minusDirection)
+                            if (test) tmpOuter.add(tmp3)
+                            test = nextOuter.addPathPoint(Pair(turnPlusY, turnPlusX), plusDirection)
+                            if (!test) tmpOuter.remove()
+                        } else if (map[turnMinusY][turnMinusX] == '.') {
+                            val test = nextOuter.addPathPoint(Pair(turnMinusY, turnMinusX), minusDirection)
+                            if (!test) tmpOuter.remove()
+                        } else if (map[turnPlusY][turnPlusX] == '.') {
+                            val test = nextOuter.addPathPoint(Pair(turnPlusY, turnPlusX), plusDirection)
+                            if (!test) tmpOuter.remove()
+                        }
+                    }
+                }
+            }
+
+            val result =
+                finished.minByOrNull { it.getNumberOfPathPoints() + (1000 * it.getNumberOfDirectionChanged()) }!!
+            val result2 =
+                finished.filter { it.getNumberOfPathPoints() + (1000 * it.getNumberOfDirectionChanged()) == 160624 }
+            println("finished: ${finished.size}")
+            println("finishedMin: ${result2.size}")
+            println("2024 day 16.1: ${result.getNumberOfPathPoints() + (1000 * result.getNumberOfDirectionChanged())}")
         }
+
+        fun day16_2() { // 692
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day16.xxx").readLines()
+
+            val startY = map.indexOfFirst { it.contains("S") }
+            val startX = map.first { it.contains("S") }.indexOf('S')
+            val targetY = map.indexOfFirst { it.contains("E") }
+            val targetX = map.first { it.contains("E") }.indexOf('E')
+            println("x:$startX,y:$startY")
+            Path.setTarget(Pair(targetY, targetX))
+            var allPathList = mutableListOf<Path>()
+            val finished = mutableListOf<Path>()
+            allPathList.add(Path(mutableSetOf(Pair(startY, startX)), 0))
+            val eastWest = listOf(0, 2)
+            val northSouth = listOf(1, 3)
+
+            while (allPathList.any { it.getState() == Path.STATE.PROCESSING }) {
+
+                val tmp = mutableListOf<Path>()
+                allPathList.filter { it.getState() == Path.STATE.FINISHED }.forEach {
+                    finished.add(it)
+                }
+                allPathList.removeIf { (it.getState() == Path.STATE.FINISHED) || (it.getNumberOfPathPoints() + (1000 * it.getNumberOfDirectionChanged())) > 160624 }
+                allPathList
+                    .groupBy { Pair(it.getLastPathPoint(), it.currentDirection) }.forEach { itOuter ->
+                        val minScorePath =
+                            itOuter.value.minByOrNull { path -> path.getNumberOfPathPoints() + (1000 * path.getNumberOfDirectionChanged()) }
+                        val minScoreValue = minScorePath?.getNumberOfPathPoints()
+                            ?.plus(1000 * minScorePath.getNumberOfDirectionChanged())
+                        val allMinScorePath = itOuter.value.filter { path -> (path.getNumberOfPathPoints() + (1000 * path.getNumberOfDirectionChanged())) == minScoreValue }
+                        val allPathPoints = mutableSetOf<Pair<Int,Int>>()
+                        allMinScorePath.forEach {
+                            allPathPoints.addAll(it.getAllPathPoints())
+                        }
+                        val allExistingPathPoints = mutableSetOf<Pair<Int,Int>>()
+                        allMinScorePath.forEach {
+                            allExistingPathPoints.addAll(it.getAllExistingPathPoints())
+                        }
+                        if(minScorePath != null) {
+                            minScorePath.addAllExistingPathPoints(allExistingPathPoints)
+                            minScorePath.addAllExistingPathPoints(allPathPoints)
+                            tmp.add(minScorePath)
+                        }
+                    }
+                allPathList = tmp
+                val tmpOuter = allPathList.listIterator()
+                while (tmpOuter.hasNext()) {
+                    val nextOuter = tmpOuter.next()
+                    val lastPathPoint = nextOuter.getLastPathPoint()
+                    val currentDirection = nextOuter.currentDirection
+                    val plusDirection = floorMod(currentDirection + 1, 4)
+                    val minusDirection = floorMod(currentDirection - 1, 4)
+                    val newY =
+                        lastPathPoint.first + (if (eastWest.contains(currentDirection)) 0 else (if (currentDirection == 1) -1 else 1))
+                    val newX =
+                        lastPathPoint.second + (if (northSouth.contains(currentDirection)) 0 else (if (currentDirection == 0) 1 else -1))
+                    val turnPlusY =
+                        lastPathPoint.first + (if (eastWest.contains(plusDirection)) 0 else (if (currentDirection == 0) -1 else 1))
+                    val turnPlusX =
+                        lastPathPoint.second + (if (northSouth.contains(plusDirection)) 0 else (if (currentDirection == 1) -1 else 1))
+                    val turnMinusY =
+                        lastPathPoint.first + (if (eastWest.contains(minusDirection)) 0 else (if (currentDirection == 0) 1 else -1))
+                    val turnMinusX =
+                        lastPathPoint.second + (if (northSouth.contains(minusDirection)) 0 else (if (currentDirection == 1) 1 else -1))
+
+                    if (map[newY][newX] != '#') {
+                        if (map[turnPlusY][turnPlusX] == '.') {
+                            val tmp1 = nextOuter.copy(
+                                pathPoints = nextOuter.pathPoints.toMutableSet(),
+                                directionChanged = nextOuter.getNumberOfDirectionChanged()
+                            )
+                            tmp1.addAllExistingPathPoints(nextOuter.getAllExistingPathPoints())
+                            val test = tmp1.addPathPoint(Pair(turnPlusY, turnPlusX), plusDirection)
+                            if (test) tmpOuter.add(tmp1)
+
+                        }
+                        if (map[turnMinusY][turnMinusX] == '.') {
+                            val tmp2 = nextOuter.copy(
+                                pathPoints = nextOuter.pathPoints.toMutableSet(),
+                                directionChanged = nextOuter.getNumberOfDirectionChanged()
+                            )
+                            tmp2.addAllExistingPathPoints(nextOuter.getAllExistingPathPoints())
+                            val test = tmp2.addPathPoint(Pair(turnMinusY, turnMinusX), minusDirection)
+                            if (test) tmpOuter.add(tmp2)
+
+                        }
+
+                        val test = nextOuter.addPathPoint(Pair(newY, newX), currentDirection)
+                        if (!test) tmpOuter.remove()
+                    } else {
+                        if (map[turnPlusY][turnPlusX] == '#' && map[turnMinusY][turnMinusX] == '#') {
+                            tmpOuter.remove()
+                        } else if (map[turnPlusY][turnPlusX] == '.' && map[turnMinusY][turnMinusX] == '.') {
+                            val tmp3 = nextOuter.copy(
+                                pathPoints = nextOuter.pathPoints.toMutableSet(),
+                                directionChanged = nextOuter.getNumberOfDirectionChanged()
+                            )
+                            tmp3.addAllExistingPathPoints(nextOuter.getAllExistingPathPoints())
+                            var test = tmp3.addPathPoint(Pair(turnMinusY, turnMinusX), minusDirection)
+                            if (test) tmpOuter.add(tmp3)
+                            test = nextOuter.addPathPoint(Pair(turnPlusY, turnPlusX), plusDirection)
+                            if (!test) tmpOuter.remove()
+                        } else if (map[turnMinusY][turnMinusX] == '.') {
+                            val test = nextOuter.addPathPoint(Pair(turnMinusY, turnMinusX), minusDirection)
+                            if (!test) tmpOuter.remove()
+                        } else if (map[turnPlusY][turnPlusX] == '.') {
+                            val test = nextOuter.addPathPoint(Pair(turnPlusY, turnPlusX), plusDirection)
+                            if (!test) tmpOuter.remove()
+                        }
+                    }
+                }
+            }
+
+            val result =
+                finished.minByOrNull { it.getNumberOfPathPoints() + (1000 * it.getNumberOfDirectionChanged()) }!!
+            println("2024 day 16.2: ${result.getNumberOfAllExistingPathPoints() + 1}")
+        }
+
+
+
+
+//        fun test() {
+//            val rawText =
+//                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
+//            val result = Day07(rawText).solvePart2()
+//            println(result)
+//        }
 
         fun advent2024() {
 //            test()
@@ -1620,9 +1865,9 @@ class Advent2024 {
 //            day14_1()
 //            day14_2()
 //            day15_1()
-            day15_2()
+//            day15_2()
 //            day16_1()
-//            day16_2()
+            day16_2()
 //            day17_1()
 //            day17_2()
 //            day18_1()
@@ -1644,3 +1889,84 @@ class Advent2024 {
         }
     }
 }
+
+data class Path(
+    var pathPoints: MutableSet<Pair<Int, Int>>,
+    var currentDirection: Int,
+    var directionChanged: Int = 0
+) {
+
+    enum class STATE { PROCESSING, FINISHED, DEAD }
+
+    //    private var directionChanged = 0
+    private var state = STATE.PROCESSING
+    private val allExistingPathPoints = mutableSetOf<Pair<Int, Int>>()
+
+    fun addAllExistingPathPoints(allPAthPoints: Set<Pair<Int, Int>>) {
+        allExistingPathPoints.addAll(allPAthPoints)
+    }
+
+    fun getAllExistingPathPoints(): MutableSet<Pair<Int, Int>> {
+        return allExistingPathPoints
+    }
+
+    fun getNumberOfAllExistingPathPoints(): Int {
+        return allExistingPathPoints.size
+    }
+
+    fun addPathPoint(newPathPoint: Pair<Int, Int>, direction: Int): Boolean {
+        if (state == STATE.DEAD) return false
+        if (newPathPoint == targetPathPoint) {
+            state = STATE.FINISHED
+            println("found FINISHED: ${this.getNumberOfPathPoints()}, ${this.getNumberOfAllExistingPathPoints()}")
+            return true
+        }
+
+        val size = pathPoints.size
+        pathPoints.add(newPathPoint)
+        if (size == pathPoints.size) {
+            this.setToDead()
+            return false
+        }
+
+        if (currentDirection != direction) {
+            currentDirection = direction
+            directionChanged++
+        }
+        return true
+    }
+
+    fun getAllPathPoints(): MutableSet<Pair<Int, Int>> {
+        return pathPoints
+    }
+
+    fun setToDead() {
+//        println("set to DEAD")
+        state = STATE.DEAD
+    }
+
+    fun getNumberOfDirectionChanged(): Int {
+        return directionChanged
+    }
+
+    fun getNumberOfPathPoints(): Int {
+        return pathPoints.size
+    }
+
+    fun getState(): STATE {
+        return state
+    }
+
+    fun getLastPathPoint(): Pair<Int, Int> {
+        return pathPoints.last()
+    }
+
+    companion object {
+        private lateinit var targetPathPoint: Pair<Int, Int>
+
+        fun setTarget(targetPathPoint: Pair<Int, Int>) {
+            Companion.targetPathPoint = targetPathPoint
+        }
+    }
+}
+
