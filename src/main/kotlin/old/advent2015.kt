@@ -49,7 +49,6 @@ class Advent2015 {
         fun day2_2() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day2.txt").readLines()
-//            val rawText = listOf("2x3x4")
             var result = 0
             rawText.forEach {
                 val dimensions = it.split("x")
@@ -63,24 +62,48 @@ class Advent2015 {
             print("2015 day 02.2: $result, ")
         }
 
-        fun day3_1() { // 2081
+        fun day3_1() { // 3_1: 2081, 3_2 2341
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day3.txt").readText()
-//            println(rawText)
 
-            val allUniqueVertices = mutableListOf<Pair<Int, Int>>()
-            allUniqueVertices.add(Pair(0,0))
-            rawText.forEach { direction ->
+            val allVerticesSanta = mutableListOf<Pair<Int, Int>>()
+            val allVerticesRobo = mutableListOf<Pair<Int, Int>>()
+
+            allVerticesSanta.add(Pair(0, 0))
+            allVerticesRobo.add(Pair(0, 0))
+            fun addVertice(list: MutableList<Pair<Int, Int>>, direction: Char) {
+
                 when (direction) {
-                    '^' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first,allUniqueVertices.last().second + 1))
-                    'v' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first,allUniqueVertices.last().second - 1))
-                    '>' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first + 1,allUniqueVertices.last().second))
-                    '<' -> allUniqueVertices.add(Pair(allUniqueVertices.last().first - 1,allUniqueVertices.last().second))
+                    '^' -> list.add(Pair(list.last().first, list.last().second + 1))
+                    'v' -> list.add(Pair(list.last().first, list.last().second - 1))
+                    '>' -> list.add(Pair(list.last().first + 1, list.last().second))
+                    '<' -> list.add(Pair(list.last().first - 1, list.last().second))
                 }
+
             }
-            println("raw: ${allUniqueVertices.size}")
-            println("unique: ${allUniqueVertices.toSet().size}")
+
+            var toggle = true
+            rawText.forEach { direction ->
+                if (toggle) {
+                    addVertice(allVerticesSanta, direction)
+                } else {
+                    addVertice(allVerticesRobo, direction)
+                }
+                toggle = !toggle
+            }
+
+            allVerticesSanta.addAll(allVerticesRobo)
+            println("2015 day3.2: ${allVerticesSanta.toSet().size}")
         }
+
+//        fun day3_2() {
+//            val rawText =
+//                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day3.txt").readText()
+//
+//
+//
+//            println("2015 day3.2: ")
+//        }
 
         fun advent2015() {
 //            day1_1()
@@ -88,6 +111,7 @@ class Advent2015 {
 //            day2_1()
 //            day2_2()
             day3_1()
+//            day3_2()
         }
     }
 }
