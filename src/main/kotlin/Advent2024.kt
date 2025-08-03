@@ -1934,7 +1934,9 @@ class Advent2024 {
                     regAStart++
                     result = mutableListOf()
                 } else {
-                    println(regAStart)
+                    if(result.size == prog.size){
+                        break
+                    }
                     currentRound--
                     regAStart = (regAStart - (regAStart % 8)) * 8
                     result = mutableListOf()
@@ -2018,6 +2020,15 @@ class Advent2024 {
 
         enum class INSTRUCTION { ADV, BXL, BST, JNZ, BXC, OUT, BDV, CDV }
 
+        fun day18_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines()
+
+            println(map)
+
+            println("2024 day 18.1:")
+        }
+
 
 //        fun test() {
 //            val rawText =
@@ -2060,8 +2071,8 @@ class Advent2024 {
 //            day15_2()
 //            day16_1()
 //            day16_2()
-            day17_1()
-//            day17_2()
+//            day17_1()
+            day17_2()
 //            day18_1()
 //            day18_2()
 //            day19_1()
