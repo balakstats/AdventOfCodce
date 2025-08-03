@@ -5,6 +5,7 @@ import Utils.Companion.readStringCsv
 import java.io.File
 import java.lang.Math.floorMod
 import java.util.stream.IntStream
+import kotlin.experimental.xor
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -1735,16 +1736,17 @@ class Advent2024 {
                             itOuter.value.minByOrNull { path -> path.getNumberOfPathPoints() + (1000 * path.getNumberOfDirectionChanged()) }
                         val minScoreValue = minScorePath?.getNumberOfPathPoints()
                             ?.plus(1000 * minScorePath.getNumberOfDirectionChanged())
-                        val allMinScorePath = itOuter.value.filter { path -> (path.getNumberOfPathPoints() + (1000 * path.getNumberOfDirectionChanged())) == minScoreValue }
-                        val allPathPoints = mutableSetOf<Pair<Int,Int>>()
+                        val allMinScorePath =
+                            itOuter.value.filter { path -> (path.getNumberOfPathPoints() + (1000 * path.getNumberOfDirectionChanged())) == minScoreValue }
+                        val allPathPoints = mutableSetOf<Pair<Int, Int>>()
                         allMinScorePath.forEach {
                             allPathPoints.addAll(it.getAllPathPoints())
                         }
-                        val allExistingPathPoints = mutableSetOf<Pair<Int,Int>>()
+                        val allExistingPathPoints = mutableSetOf<Pair<Int, Int>>()
                         allMinScorePath.forEach {
                             allExistingPathPoints.addAll(it.getAllExistingPathPoints())
                         }
-                        if(minScorePath != null) {
+                        if (minScorePath != null) {
                             minScorePath.addAllExistingPathPoints(allExistingPathPoints)
                             minScorePath.addAllExistingPathPoints(allPathPoints)
                             tmp.add(minScorePath)
@@ -1824,7 +1826,115 @@ class Advent2024 {
             println("2024 day 16.2: ${result.getNumberOfAllExistingPathPoints() + 1}")
         }
 
+        fun day17_1() { // 7,0,3,1,2,6,3,7,1
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day17.txt").readLines()
 
+            var registerA: Long = map.first().split(":")[1].trim().toLong()
+            var registerB: Long = map[1].split(":")[1].trim().toLong()
+            var registerC: Long = map[2].split(":")[1].trim().toLong()
+            val prog = map[4].split(":")[1].trim().replace(",", "").map { it.digitToInt() }.toList()
+            var insP = 0
+            val result = mutableListOf<String>()
+
+            while (true) {
+                val currentINSTRUCTION = INSTRUCTION.entries.toTypedArray()[prog[insP]]
+                val currentLiteral = prog[insP + 1]
+                val currentCombo: Long = when (prog[insP + 1]) {
+                    in 0..3 -> prog[insP + 1].toLong()
+                    4 -> registerA
+                    5 -> registerB
+                    6 -> registerC
+                    else -> {
+                        throw Exception("wrong")
+                    }
+                }
+
+                fun calcAdv(): Long {
+//                    println("${registerA.shr(currentCombo.toInt())}")
+                    return registerA.shr(3)
+                }
+
+                fun calcBxl(): Long {
+//                    println("${registerB xor currentLiteral.toLong()}")
+                    return registerB xor currentLiteral.toLong()
+                }
+
+                fun calcBst(): Long {
+//                    println("${currentCombo.and(7L)}")
+                    return currentCombo.and(7L)
+                }
+
+                fun calcJnz() {
+//                    if(registerA == 0L){
+//                        println("${insP + 2}")
+//                    } else{
+//                        println("$currentLiteral")
+//                    }
+                    println("jump: $currentLiteral")
+                    insP = if (registerA == 0L) insP else currentLiteral - 2
+                }
+
+                fun calcBxc(): Long {
+//                    println("${registerB xor registerC}")
+                    return registerB xor registerC
+                }
+
+                fun calcOut(): Long {
+//                    println("${currentCombo.and(7L)}")
+                    return currentCombo.and(7L)
+                }
+
+//                fun calcBdv(): Long {
+////                    println("${registerA shr currentCombo.toInt()}")
+//                    return registerA shr currentCombo.toInt()
+//                }
+
+                fun calcCdv(): Long {
+//                    println("${registerA shr currentCombo.toInt()}")
+                    return registerA shr currentCombo.toInt()
+                }
+
+                when (currentINSTRUCTION) {
+                    INSTRUCTION.ADV -> registerA = calcAdv()                 // 4
+                    INSTRUCTION.BXL -> registerB = calcBxl()                 // 2, 6
+                    INSTRUCTION.BST -> registerB = calcBst()                 // 1
+                    INSTRUCTION.JNZ -> calcJnz()                             // 8
+                    INSTRUCTION.BXC -> registerB = calcBxc()                 // 5
+                    INSTRUCTION.OUT -> result.add(calcOut().toString())      // 7
+                    INSTRUCTION.BDV -> println("nothing")                    //
+                    INSTRUCTION.CDV -> registerC = calcCdv()                 // 3
+                }
+
+                insP += 2
+                if (insP >= prog.size) {
+                    break
+                }
+            }
+
+            println("2024 day 17.1: ${result.joinToString(",")}")
+        }
+
+
+        fun day17_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day17.txt").readLines()
+
+            var registerA: Long = map.first().split(":")[1].trim().toLong()
+            var registerB: Long = map[1].split(":")[1].trim().toLong()
+            var registerC: Long = map[2].split(":")[1].trim().toLong()
+            val prog = map[4].split(":")[1].trim().replace(",", "").map { it.digitToInt() }.toList()
+            var insP = 0
+            val result = mutableListOf<String>()
+
+            val maxRounds = 1
+            var currentRound = 1
+
+            println("2024 day 17.2: ${result.joinToString(",")}")
+        }
+
+
+        enum class INSTRUCTION { ADV, BXL, BST, JNZ, BXC, OUT, BDV, CDV }
 
 
 //        fun test() {
@@ -1867,8 +1977,8 @@ class Advent2024 {
 //            day15_1()
 //            day15_2()
 //            day16_1()
-            day16_2()
-//            day17_1()
+//            day16_2()
+            day17_1()
 //            day17_2()
 //            day18_1()
 //            day18_2()
