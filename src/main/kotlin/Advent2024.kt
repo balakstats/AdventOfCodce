@@ -1856,13 +1856,14 @@ class Advent2024 {
                 }
 
                 fun calcBxl(): Long {
-//                    println("${registerB xor currentLiteral.toLong()}")
+                    print("$registerB,$currentLiteral - ")
+                    println("regB: ${registerB xor currentLiteral.toLong()}")
                     return registerB xor currentLiteral.toLong()
                 }
 
                 fun calcBst(): Long {
 //                    println("${currentCombo.and(7L)}")
-                    return currentCombo.and(7L)
+                    return registerA.and(7L)
                 }
 
                 fun calcJnz() {
@@ -1871,7 +1872,7 @@ class Advent2024 {
 //                    } else{
 //                        println("$currentLiteral")
 //                    }
-                    println("jump: $currentLiteral")
+//                    println("jump: $currentLiteral")
                     insP = if (registerA == 0L) insP else currentLiteral - 2
                 }
 
@@ -1916,21 +1917,102 @@ class Advent2024 {
         }
 
 
-        fun day17_2(){
+        fun day17_2() { // 109020013201563
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day17.txt").readLines()
 
-            var registerA: Long = map.first().split(":")[1].trim().toLong()
-            var registerB: Long = map[1].split(":")[1].trim().toLong()
-            var registerC: Long = map[2].split(":")[1].trim().toLong()
+            var registerA: Long
+            var registerB: Long
+            var registerC: Long
             val prog = map[4].split(":")[1].trim().replace(",", "").map { it.digitToInt() }.toList()
-            var insP = 0
-            val result = mutableListOf<String>()
+            var result = mutableListOf<String>()
 
-            val maxRounds = 1
-            var currentRound = 1
+            var currentRound = 15
+            var regAStart = 0L
+            while (currentRound > -1) {
+                if (result.toString() != prog.subList(currentRound,prog.size).toString()) {
+                    regAStart++
+                    result = mutableListOf()
+                } else {
+                    println(regAStart)
+                    currentRound--
+                    regAStart = (regAStart - (regAStart % 8)) * 8
+                    result = mutableListOf()
+                }
+                var insP = 0
+                registerA = regAStart
+                registerB = 0
+                registerC = 0
+                while (true) {
+                    val currentINSTRUCTION = INSTRUCTION.entries.toTypedArray()[prog[insP]]
+                    val currentLiteral = prog[insP + 1]
+                    val currentCombo: Long = when (prog[insP + 1]) {
+                        in 0..3 -> prog[insP + 1].toLong()
+                        4 -> registerA
+                        5 -> registerB
+                        6 -> registerC
+                        else -> {
+                            throw Exception("wrong")
+                        }
+                    }
 
-            println("2024 day 17.2: ${result.joinToString(",")}")
+                    fun calcAdv(): Long {
+//                    println("${registerA.shr(currentCombo.toInt())}")
+                        return registerA.shr(3)
+                    }
+
+                    fun calcBxl(): Long {
+//                    println("${registerB xor currentLiteral.toLong()}")
+                        return registerB xor currentLiteral.toLong()
+                    }
+
+                    fun calcBst(): Long {
+                        return registerA.and(7L)
+                    }
+
+                    fun calcJnz() {
+                        insP = if (registerA == 0L) insP else currentLiteral - 2
+                    }
+
+                    fun calcBxc(): Long {
+//                    println("${registerB xor registerC}")
+                        return registerB xor registerC
+                    }
+
+                    fun calcOut(): Long {
+                        return registerB.and(7L)
+                    }
+
+//                fun calcBdv(): Long {
+////                    println("${registerA shr currentCombo.toInt()}")
+//                    return registerA shr currentCombo.toInt()
+//                }
+
+                    fun calcCdv(): Long {
+//                    println("${registerA shr currentCombo.toInt()}")
+                        return registerA shr currentCombo.toInt()
+                    }
+
+                    when (currentINSTRUCTION) {
+                        INSTRUCTION.ADV -> registerA = calcAdv()                 // 4
+                        INSTRUCTION.BXL -> registerB = calcBxl()                 // 2, 6
+                        INSTRUCTION.BST -> registerB = calcBst()                 // 1
+                        INSTRUCTION.JNZ -> calcJnz()                             // 8
+                        INSTRUCTION.BXC -> registerB = calcBxc()                 // 5
+                        INSTRUCTION.OUT -> result.add(calcOut().toString())      // 7
+                        INSTRUCTION.BDV -> println("nothing")                    //
+                        INSTRUCTION.CDV -> registerC = calcCdv()                 // 3
+                    }
+
+                    insP += 2
+                    if (insP >= prog.size) {
+                        break
+                    }
+                }
+            }
+
+
+            println("2024 day 17.2: $regAStart")
         }
 
 
