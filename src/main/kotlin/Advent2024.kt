@@ -2061,15 +2061,61 @@ class Advent2024 {
                 }
             }
 
-            println("number of vertices: ${g.vertexSet().size}")
-            println("number of edges: ${g.edgeSet().size}")
-
             val dijkstraAlg =
                 DijkstraShortestPath<Pair<Int, Int>, DefaultEdge?>(g)
             val iPaths = dijkstraAlg.getPaths(Pair(0,0))
-            println("shortest path: " + iPaths.getPath(Pair(maxRange,maxRange)).length)
 
-            println("2024 day 18.1:")
+            println("2024 day 18.1: ${iPaths.getPath(Pair(maxRange,maxRange)).length}")
+        }
+
+        fun day18_2() { //20,64
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines()
+
+            var result = ""
+            val noVertex = mutableSetOf<Pair<Int,Int>>()
+            run ready@ {
+                map.forEachIndexed { index, line ->
+                    noVertex.add(Pair(line.split(",")[0].toInt(), line.split(",")[1].toInt()))
+
+                    val g: Graph<Pair<Int, Int>, DefaultEdge?> =
+                        SimpleGraph<Pair<Int, Int>, DefaultEdge?>(DefaultEdge::class.java)
+
+                    val maxRange = 70
+                    for (x in 0..maxRange) {
+                        for (y in 0..maxRange) {
+                            if (!noVertex.contains(Pair(x, y))) {
+                                g.addVertex(Pair(x, y))
+                            }
+
+                        }
+                    }
+
+                    // add edges
+                    for (x in 0..maxRange) {
+                        for (y in 0..maxRange) {
+                            // add horizontal
+                            if (!noVertex.contains(Pair(x, y)) && !noVertex.contains(Pair(x + 1, y)) && x < maxRange) {
+                                g.addEdge(Pair(x, y), Pair(x + 1, y))
+                            }
+                            // add vertical
+                            if (!noVertex.contains(Pair(x, y)) && !noVertex.contains(Pair(x, y + 1)) && y < maxRange) {
+                                g.addEdge(Pair(x, y), Pair(x, y + 1))
+                            }
+                        }
+                    }
+
+                    val dijkstraAlg =
+                        DijkstraShortestPath<Pair<Int, Int>, DefaultEdge?>(g)
+                    val iPaths = dijkstraAlg.getPaths(Pair(0, 0))
+                    if (iPaths.getPath(Pair(maxRange, maxRange)) == null) {
+                        result = map[index]
+                        return@ready
+                    }
+                }
+            }
+
+            println("2024 day 18.2: $result")
         }
 
 
@@ -2116,8 +2162,8 @@ class Advent2024 {
 //            day16_2()
 //            day17_1()
 //            day17_2()
-            day18_1()
-//            day18_2()
+//            day18_1()
+            day18_2()
 //            day19_1()
 //            day19_2()
 //            day20_1()
