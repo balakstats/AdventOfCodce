@@ -96,22 +96,22 @@ class Advent2015 {
             println("2015 day3.2: ${allVerticesSanta.toSet().size}")
         }
 
-//        fun day3_2() {
-//            val rawText =
-//                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day3.txt").readText()
-//
-//
-//
-//            println("2015 day3.2: ")
-//        }
+        fun day4_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day4.txt").readText()
+
+
+
+            println("2015 day4.1: ")
+        }
 
         fun advent2015() {
 //            day1_1()
 //            day1_2()
 //            day2_1()
 //            day2_2()
-            day3_1()
-//            day3_2()
+//            day3_1()
+            day4_1()
         }
     }
 }

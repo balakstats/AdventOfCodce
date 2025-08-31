@@ -2,14 +2,18 @@ import Utils.Companion.calculateGCD
 import Utils.Companion.isReportSafe
 import Utils.Companion.readIntCsv
 import Utils.Companion.readStringCsv
+import org.jgrapht.Graph
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath
+import org.jgrapht.graph.DefaultEdge
+import org.jgrapht.graph.SimpleGraph
 import java.io.File
 import java.lang.Math.floorMod
 import java.util.stream.IntStream
-import kotlin.experimental.xor
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+
 
 class Advent2024 {
     companion object {
@@ -1930,11 +1934,11 @@ class Advent2024 {
             var currentRound = 15
             var regAStart = 0L
             while (currentRound > -1) {
-                if (result.toString() != prog.subList(currentRound,prog.size).toString()) {
+                if (result.toString() != prog.subList(currentRound, prog.size).toString()) {
                     regAStart++
                     result = mutableListOf()
                 } else {
-                    if(result.size == prog.size){
+                    if (result.size == prog.size) {
                         break
                     }
                     currentRound--
@@ -2020,11 +2024,50 @@ class Advent2024 {
 
         enum class INSTRUCTION { ADV, BXL, BST, JNZ, BXC, OUT, BDV, CDV }
 
-        fun day18_1(){
+        fun day18_1() { //286
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines()
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines().subList(0,1024)
 
-            println(map)
+//            println("map: $map")
+            val noVertex = mutableSetOf<Pair<Int,Int>>()
+            map.forEach { line ->
+                noVertex.add(Pair(line.split(",")[0].toInt(),line.split(",")[1].toInt()))
+            }
+
+            val g: Graph<Pair<Int, Int>, DefaultEdge?> =
+                SimpleGraph<Pair<Int, Int>, DefaultEdge?>(DefaultEdge::class.java)
+
+            val maxRange = 70
+            for (x in 0..maxRange) {
+                for (y in 0..maxRange) {
+                    if (!noVertex.contains(Pair(x, y))) {
+                        g.addVertex(Pair(x, y))
+                    }
+
+                }
+            }
+
+            // add edges
+            for (x in 0..maxRange) {
+                for (y in 0..maxRange) {
+                    // add horizontal
+                    if (!noVertex.contains(Pair(x, y)) && !noVertex.contains(Pair(x + 1, y)) && x < maxRange) {
+                        g.addEdge(Pair(x, y), Pair(x + 1, y))
+                    }
+                    // add vertical
+                    if (!noVertex.contains(Pair(x, y)) && !noVertex.contains(Pair(x, y + 1)) && y < maxRange) {
+                        g.addEdge(Pair(x, y), Pair(x, y + 1))
+                    }
+                }
+            }
+
+            println("number of vertices: ${g.vertexSet().size}")
+            println("number of edges: ${g.edgeSet().size}")
+
+            val dijkstraAlg =
+                DijkstraShortestPath<Pair<Int, Int>, DefaultEdge?>(g)
+            val iPaths = dijkstraAlg.getPaths(Pair(0,0))
+            println("shortest path: " + iPaths.getPath(Pair(maxRange,maxRange)).length)
 
             println("2024 day 18.1:")
         }
@@ -2072,8 +2115,8 @@ class Advent2024 {
 //            day16_1()
 //            day16_2()
 //            day17_1()
-            day17_2()
-//            day18_1()
+//            day17_2()
+            day18_1()
 //            day18_2()
 //            day19_1()
 //            day19_2()
