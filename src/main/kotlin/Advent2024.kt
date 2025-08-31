@@ -2118,6 +2118,103 @@ class Advent2024 {
             println("2024 day 18.2: $result")
         }
 
+        fun day19_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
+
+            println(map)
+        }
+
+        fun day19_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
+
+            println(map)
+        }
+
+        fun day20_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day20.txt").readLines()
+
+            println(map)
+        }
+
+        fun day20_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day20.txt").readLines()
+
+            println(map)
+        }
+
+        fun day21_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day21.txt").readLines()
+
+            println(map)
+        }
+
+        fun day21_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day21.txt").readLines()
+
+            println(map)
+        }
+
+        fun day22_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day22.txt").readLines()
+
+            println(map)
+        }
+
+        fun day22_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day22.txt").readLines()
+
+            println(map)
+        }
+
+        fun day23_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day23.txt").readLines()
+
+            println(map)
+        }
+
+        fun day23_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day23.txt").readLines()
+
+            println(map)
+        }
+
+        fun day24_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day24.txt").readLines()
+
+            println(map)
+        }
+
+        fun day24_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day24.txt").readLines()
+
+            println(map)
+        }
+
+        fun day25_1(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day25.txt").readLines()
+
+            println(map)
+        }
+
+        fun day25_2(){
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day25.txt").readLines()
+
+            println(map)
+        }
 
 //        fun test() {
 //            val rawText =
@@ -2163,8 +2260,8 @@ class Advent2024 {
 //            day17_1()
 //            day17_2()
 //            day18_1()
-            day18_2()
-//            day19_1()
+//            day18_2()
+            day19_1()
 //            day19_2()
 //            day20_1()
 //            day20_2()
