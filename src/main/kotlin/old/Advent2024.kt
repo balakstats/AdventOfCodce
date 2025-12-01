@@ -1,3 +1,5 @@
+package old
+
 import Utils.Companion.calculateGCD
 import Utils.Companion.isReportSafe
 import Utils.Companion.readIntCsv
@@ -1639,7 +1641,7 @@ class Advent2024 {
                 val tmpOuter = allPathList.listIterator()
                 while (tmpOuter.hasNext()) {
                     val nextOuter = tmpOuter.next()
-//                    if (nextOuter.getState() == Path.STATE.FINISHED) continue
+//                    if (nextOuter.getState() == old.Path.STATE.FINISHED) continue
                     val lastPathPoint = nextOuter.getLastPathPoint()
                     val currentDirection = nextOuter.currentDirection
                     val plusDirection = floorMod(currentDirection + 1, 4)
@@ -2026,12 +2028,13 @@ class Advent2024 {
 
         fun day18_1() { //286
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines().subList(0,1024)
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines()
+                    .subList(0, 1024)
 
 //            println("map: $map")
-            val noVertex = mutableSetOf<Pair<Int,Int>>()
+            val noVertex = mutableSetOf<Pair<Int, Int>>()
             map.forEach { line ->
-                noVertex.add(Pair(line.split(",")[0].toInt(),line.split(",")[1].toInt()))
+                noVertex.add(Pair(line.split(",")[0].toInt(), line.split(",")[1].toInt()))
             }
 
             val g: Graph<Pair<Int, Int>, DefaultEdge?> =
@@ -2063,9 +2066,9 @@ class Advent2024 {
 
             val dijkstraAlg =
                 DijkstraShortestPath<Pair<Int, Int>, DefaultEdge?>(g)
-            val iPaths = dijkstraAlg.getPaths(Pair(0,0))
+            val iPaths = dijkstraAlg.getPaths(Pair(0, 0))
 
-            println("2024 day 18.1: ${iPaths.getPath(Pair(maxRange,maxRange)).length}")
+            println("2024 day 18.1: ${iPaths.getPath(Pair(maxRange, maxRange)).length}")
         }
 
         fun day18_2() { //20,64
@@ -2073,8 +2076,8 @@ class Advent2024 {
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines()
 
             var result = ""
-            val noVertex = mutableSetOf<Pair<Int,Int>>()
-            run ready@ {
+            val noVertex = mutableSetOf<Pair<Int, Int>>()
+            run ready@{
                 map.forEachIndexed { index, line ->
                     noVertex.add(Pair(line.split(",")[0].toInt(), line.split(",")[1].toInt()))
 
@@ -2118,98 +2121,122 @@ class Advent2024 {
             println("2024 day 18.2: $result")
         }
 
-        fun day19_1(){
+        fun day19_1() {
+            val map =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
+
+            val patterns = map[0].split(", ").sortedBy { it.length }.reversed()
+//            println(patterns)
+            val designs = map.subList(2, map.size)
+
+            var good = 0
+            var bad = 0
+            val badPattern = mutableListOf<String>()
+            designs.forEach { design ->
+                var result = design
+                run empty@{
+                    patterns.forEach { pattern ->
+                        result = result.replace(pattern, "")
+                        if (result.isEmpty()) {
+                            good++
+                            return@empty
+                        }
+                    }
+                    badPattern.add(result)
+                    bad++
+                }
+            }
+            println(badPattern)
+            println("good: $good")
+            println("bad: $bad")
+            println("2024 day 19.1: ")
+        }
+
+        fun day19_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
 
             println(map)
         }
 
-        fun day19_2(){
-            val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
-
-            println(map)
-        }
-
-        fun day20_1(){
+        fun day20_1() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day20.txt").readLines()
 
             println(map)
         }
 
-        fun day20_2(){
+        fun day20_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day20.txt").readLines()
 
             println(map)
         }
 
-        fun day21_1(){
+        fun day21_1() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day21.txt").readLines()
 
             println(map)
         }
 
-        fun day21_2(){
+        fun day21_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day21.txt").readLines()
 
             println(map)
         }
 
-        fun day22_1(){
+        fun day22_1() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day22.txt").readLines()
 
             println(map)
         }
 
-        fun day22_2(){
+        fun day22_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day22.txt").readLines()
 
             println(map)
         }
 
-        fun day23_1(){
+        fun day23_1() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day23.txt").readLines()
 
             println(map)
         }
 
-        fun day23_2(){
+        fun day23_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day23.txt").readLines()
 
             println(map)
         }
 
-        fun day24_1(){
+        fun day24_1() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day24.txt").readLines()
 
             println(map)
         }
 
-        fun day24_2(){
+        fun day24_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day24.txt").readLines()
 
             println(map)
         }
 
-        fun day25_1(){
+        fun day25_1() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day25.txt").readLines()
 
             println(map)
         }
 
-        fun day25_2(){
+        fun day25_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day25.txt").readLines()
 
