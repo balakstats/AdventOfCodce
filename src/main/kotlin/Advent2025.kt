@@ -416,43 +416,55 @@ class Advent2025 {
             val ranges = rawText.filter { it.contains("-") }
             val ids =
                 rawText.filter { !it.contains("-") && it.isNotEmpty() }.map { it.toLong() }.toMutableSet().sorted()
-            println(ids.size)
-            var remove = 0L
             ids.forEach outer@{ id ->
                 ranges.forEach {
                     val start = it.split("-")[0].toLong()
                     val stop = it.split("-")[1].toLong()
-                    if(id in start..stop){
+                    if (id in start..stop) {
                         result++
                         return@outer
                     }
                 }
             }
-//            ranges.forEach outer@ {
-//                if(remove > 0L){
-//                    ids.remove(remove)
-//                    remove = 0L
-//                }
-//                val start = it.split("-")[0].toLong()
-//                val stop = it.split("-")[1].toLong()
-//                ids.forEach inner@{ id ->
-//                    if(id in start..stop){
-//                        result++
-//                        remove = id
-//                        return@outer
-//                    }
-//                }
-//            }
-            // 767 too high
             println("2025 day 5.1: $result")
         }
 
-        fun day5_2() {
+        fun day5_2() { // 336495597913098
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day5.txt").readLines()
-            var result = 0
+            var result = 0L
+
+            val ranges =
+                rawText.filter { it.contains("-") }.map { Pair(it.split("-")[0].toLong(), it.split("-")[1].toLong()) }
+                    .sortedBy { it.first }
+            val distinctRanges = mutableListOf<Pair<Long, Long>>()
+            ranges.forEach {
+                if (distinctRanges.isEmpty()) {
+                    distinctRanges.add(it)
+                    return@forEach
+                }
+
+                if (it.first <= distinctRanges.last().second) {
+                    if(it.second > distinctRanges.last().second) {
+                        distinctRanges[distinctRanges.size - 1] = Pair(distinctRanges.last().first, it.second)
+                    }
+                } else {
+                    distinctRanges.add(it)
+                }
+            }
+
+            distinctRanges.forEach {
+                result += it.second - it.first + 1
+            }
 
             println("2025 day 5.2: $result")
+        }
+
+        fun day6_1(){
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
+
+            println("2025 day 6.1: ")
         }
 
         fun advent2025() {
@@ -465,8 +477,10 @@ class Advent2025 {
 //            day3_2()
 //            day4_1()
 //            day4_2()
-            day5_1()
+//            day5_1()
 //            day5_2()
+            day6_1()
+//            day6_2()
         }
 
 
