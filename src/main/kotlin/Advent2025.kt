@@ -283,8 +283,9 @@ class Advent2025 {
             val maxY = rawText.size
             val maxX = rawText[0].length
 
+
             rawText.forEachIndexed { y, line ->
-                line.forEachIndexed { x, el ->
+                line.forEachIndexed { x, _ ->
                     if (rawText[y][x] != '@') {
                         return@forEachIndexed
                     }
@@ -301,10 +302,10 @@ class Advent2025 {
                     }
 
                     // look straight
-                    if(y > 0 && (rawText[y - 1][x] == '@') ){
+                    if (y > 0 && (rawText[y - 1][x] == '@')) {
                         adjRollsFound++
                     }
-                    if(y < maxY - 1 && (rawText[y + 1][x] == '@') ){
+                    if (y < maxY - 1 && (rawText[y + 1][x] == '@')) {
                         adjRollsFound++
                     }
 
@@ -319,7 +320,9 @@ class Advent2025 {
                         adjRollsFound++
                     }
 
-                    result += if (adjRollsFound < 4) 1 else 0
+                    if (adjRollsFound < 4) {
+                        result += 1
+                    }
                 }
             }
 
@@ -328,9 +331,97 @@ class Advent2025 {
 
         private fun day4_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines()
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines().toMutableList()
             var result = 0
+            val maxY = rawText.size
+            val maxX = rawText[0].length
+
+            var removeY = -1
+            var removeX = -1
+            loop@ while (true) {
+                if (removeX >= 0) {
+                    val tmp = rawText[removeY].toCharArray()
+                    tmp[removeX] = '.'
+                    rawText[removeY] = tmp.contentToString().replace(",","").replace("[","").replace("]","").replace(" ","")
+                    removeX = -1
+                    removeY = -1
+                }
+                run go@{
+                    rawText.forEachIndexed outer@{ y, line ->
+                        line.forEachIndexed { x, _ ->
+                            if (rawText[y][x] != '@') {
+                                if(x == maxX -1 && y == maxY -1){
+                                    break@loop
+                                }
+                                return@forEachIndexed
+                            }
+                            var adjRollsFound = 0
+                            // look back
+                            if (y > 0 && x > 0 && (rawText[y - 1][x - 1] == '@')) {
+                                adjRollsFound++
+                            }
+                            if (x > 0 && (rawText[y][x - 1] == '@')) {
+                                adjRollsFound++
+                            }
+                            if (y < maxY - 1 && x > 0 && (rawText[y + 1][x - 1] == '@')) {
+                                adjRollsFound++
+                            }
+
+                            // look straight
+                            if (y > 0 && (rawText[y - 1][x] == '@')) {
+                                adjRollsFound++
+                            }
+                            if (y < maxY - 1 && (rawText[y + 1][x] == '@')) {
+                                adjRollsFound++
+                            }
+
+                            // look ahead
+                            if (y > 0 && x < maxX - 1 && (rawText[y - 1][x + 1] == '@')) {
+                                adjRollsFound++
+                            }
+                            if (x < maxX - 1 && (rawText[y][x + 1] == '@')) {
+                                adjRollsFound++
+                            }
+                            if (y < maxY - 1 && x < maxX - 1 && (rawText[y + 1][x + 1] == '@')) {
+                                adjRollsFound++
+                            }
+
+                            if (adjRollsFound < 4) {
+                                result++
+                                removeX = x
+                                removeY = y
+                                if(x == maxX -1 && y == maxY -1){
+                                    break@loop
+                                }
+                                return@go
+                            }
+                            if(x == maxX -1 && y == maxY -1){
+                                break@loop
+                            }
+                        }
+                    }
+                }
+            }
+
             println("2025 day 4.2: $result")
+        }
+
+        fun day5_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day5.txt").readLines()
+            var result = 0
+
+            println(rawText)
+
+            println("2025 day 5.1: $result")
+        }
+
+        fun day5_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day5.txt").readLines()
+            var result = 0
+
+            println("2025 day 5.2: $result")
         }
 
         fun advent2025() {
@@ -341,8 +432,10 @@ class Advent2025 {
 //            go()
 //            day3_1()
 //            day3_2()
-            day4_1()
+//            day4_1()
 //            day4_2()
+            day5_1()
+//            day5_2()
         }
 
 
