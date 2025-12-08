@@ -1,4 +1,5 @@
 import java.io.File
+import kotlin.collections.indexOfFirst
 
 
 class Advent2025 {
@@ -137,7 +138,7 @@ class Advent2025 {
                         continue
                     }
 
-                    if(previousLength != iLength || divisors.isEmpty()) {
+                    if (previousLength != iLength || divisors.isEmpty()) {
                         for (j in 2..iLength) {
                             if (iLength % j == 0) {
                                 divisors.add(j)
@@ -187,7 +188,7 @@ class Advent2025 {
                 val end = element.split("-")[1]
                 rangeLoop@ for (id in start.toLong()..end.toLong()) {
                     val idString = id.toString()
-                    for (patternSize in 1 .. idString.length / 2) {
+                    for (patternSize in 1..idString.length / 2) {
                         if (idString.length % patternSize == 0) {
                             val chunked = idString.chunked(patternSize)
                             if (chunked.all { it == chunked[0] }) {
@@ -206,12 +207,144 @@ class Advent2025 {
             println(finalSet.sorted())
         }
 
+        fun day3_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day3.txt").readLines()
+
+            var result = 0L
+            var i = 0
+            rawText.forEach { line ->
+                val charArray = line.map { Integer.parseInt(it.toString()) }
+                val find = charArray.sortedDescending()
+                val first = find[0]
+                val second = find[1]
+                if (first == second) {
+                    result += Integer.parseInt("${first}$second")
+                    println("a${i++}: ${Integer.parseInt("${first}$second")} - $result")
+                } else {
+                    val numberOfElements = charArray.size
+                    val indexFirst = charArray.indexOfFirst { it == first }
+                    val indexSecond = charArray.indexOfFirst { it == second }
+                    if (indexFirst < indexSecond) {
+                        val add = Integer.parseInt("${first}$second")
+                        result += add
+                        println("b${i++}: $add - $result")
+                        return@forEach
+                    }
+                    if (indexFirst > indexSecond) {
+                        if (indexFirst == numberOfElements - 1) {
+                            val add = Integer.parseInt("${second}$first")
+                            result += add
+                            println("c${i++}: $add - $result")
+                        } else {
+                            val tmpArray = charArray.subList(indexFirst + 1, numberOfElements)
+                            val newSecond = tmpArray.sortedDescending()[0]
+                            val add = Integer.parseInt("${first}$newSecond")
+                            result += add
+                            println("d${i++}: $add - $result")
+                        }
+                        return@forEach
+                    }
+                }
+            }
+
+
+            println("2025 day 3.1: $result")
+        }
+
+        fun day3_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day3.txt").readLines()
+
+            var result = 0L
+            val length = rawText[0].length
+
+            rawText.forEach { line ->
+                var tmpResult = ""
+                var currentIndex = 0
+                for (index in 11 downTo 0) {
+                    val subLine = line.substring(currentIndex, length - index).map { Integer.parseInt(it.toString()) }
+                    val highestValue = subLine.sortedDescending()[0]
+                    currentIndex += subLine.indexOfFirst { it == highestValue } + 1
+                    tmpResult = "$tmpResult$highestValue"
+                    println("index: $subLine; $tmpResult")
+                }
+                result += tmpResult.toLong()
+            }
+
+
+            println("2025 day 3.2: $result")
+        }
+
+        private fun day4_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines()
+            var result = 0
+            val maxY = rawText.size
+            val maxX = rawText[0].length
+
+            rawText.forEachIndexed { y, line ->
+                line.forEachIndexed { x, el ->
+                    if (rawText[y][x] != '@') {
+                        return@forEachIndexed
+                    }
+                    var adjRollsFound = 0
+                    // look back
+                    if (y > 0 && x > 0 && (rawText[y - 1][x - 1] == '@')) {
+                        adjRollsFound++
+                    }
+                    if (x > 0 && (rawText[y][x - 1] == '@')) {
+                        adjRollsFound++
+                    }
+                    if (y < maxY - 1 && x > 0 && (rawText[y + 1][x - 1] == '@')) {
+                        adjRollsFound++
+                    }
+
+                    // look straight
+                    if(y > 0 && (rawText[y - 1][x] == '@') ){
+                        adjRollsFound++
+                    }
+                    if(y < maxY - 1 && (rawText[y + 1][x] == '@') ){
+                        adjRollsFound++
+                    }
+
+                    // look ahead
+                    if (y > 0 && x < maxX - 1 && (rawText[y - 1][x + 1] == '@')) {
+                        adjRollsFound++
+                    }
+                    if (x < maxX - 1 && (rawText[y][x + 1] == '@')) {
+                        adjRollsFound++
+                    }
+                    if (y < maxY - 1 && x < maxX - 1 && (rawText[y + 1][x + 1] == '@')) {
+                        adjRollsFound++
+                    }
+
+                    result += if (adjRollsFound < 4) 1 else 0
+                }
+            }
+
+            println("2025 day 4.1: $result")
+        }
+
+        private fun day4_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines()
+            var result = 0
+            println("2025 day 4.2: $result")
+        }
+
         fun advent2025() {
 //            day1_1()
 //            day1_2()
 //            day2_1()
-            day2_2()
-            go()
+//            day2_2()
+//            go()
+//            day3_1()
+//            day3_2()
+            day4_1()
+//            day4_2()
         }
+
+
     }
 }
