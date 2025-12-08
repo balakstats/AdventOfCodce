@@ -331,7 +331,8 @@ class Advent2025 {
 
         private fun day4_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines().toMutableList()
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines()
+                    .toMutableList()
             var result = 0
             val maxY = rawText.size
             val maxX = rawText[0].length
@@ -342,7 +343,8 @@ class Advent2025 {
                 if (removeX >= 0) {
                     val tmp = rawText[removeY].toCharArray()
                     tmp[removeX] = '.'
-                    rawText[removeY] = tmp.contentToString().replace(",","").replace("[","").replace("]","").replace(" ","")
+                    rawText[removeY] =
+                        tmp.contentToString().replace(",", "").replace("[", "").replace("]", "").replace(" ", "")
                     removeX = -1
                     removeY = -1
                 }
@@ -350,7 +352,7 @@ class Advent2025 {
                     rawText.forEachIndexed outer@{ y, line ->
                         line.forEachIndexed { x, _ ->
                             if (rawText[y][x] != '@') {
-                                if(x == maxX -1 && y == maxY -1){
+                                if (x == maxX - 1 && y == maxY - 1) {
                                     break@loop
                                 }
                                 return@forEachIndexed
@@ -390,12 +392,12 @@ class Advent2025 {
                                 result++
                                 removeX = x
                                 removeY = y
-                                if(x == maxX -1 && y == maxY -1){
+                                if (x == maxX - 1 && y == maxY - 1) {
                                     break@loop
                                 }
                                 return@go
                             }
-                            if(x == maxX -1 && y == maxY -1){
+                            if (x == maxX - 1 && y == maxY - 1) {
                                 break@loop
                             }
                         }
@@ -411,8 +413,37 @@ class Advent2025 {
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day5.txt").readLines()
             var result = 0
 
-            println(rawText)
-
+            val ranges = rawText.filter { it.contains("-") }
+            val ids =
+                rawText.filter { !it.contains("-") && it.isNotEmpty() }.map { it.toLong() }.toMutableSet().sorted()
+            println(ids.size)
+            var remove = 0L
+            ids.forEach outer@{ id ->
+                ranges.forEach {
+                    val start = it.split("-")[0].toLong()
+                    val stop = it.split("-")[1].toLong()
+                    if(id in start..stop){
+                        result++
+                        return@outer
+                    }
+                }
+            }
+//            ranges.forEach outer@ {
+//                if(remove > 0L){
+//                    ids.remove(remove)
+//                    remove = 0L
+//                }
+//                val start = it.split("-")[0].toLong()
+//                val stop = it.split("-")[1].toLong()
+//                ids.forEach inner@{ id ->
+//                    if(id in start..stop){
+//                        result++
+//                        remove = id
+//                        return@outer
+//                    }
+//                }
+//            }
+            // 767 too high
             println("2025 day 5.1: $result")
         }
 
