@@ -463,7 +463,9 @@ class Advent2025 {
         fun day6_1(){
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
+            var result = 0L
 
+            
             println("2025 day 6.1: ")
         }
 

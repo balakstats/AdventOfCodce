@@ -1,6 +1,8 @@
 package old
 
+import sun.security.util.KnownOIDs
 import java.io.File
+import java.security.MessageDigest
 
 class Advent2015 {
 
@@ -97,12 +99,24 @@ class Advent2015 {
         }
 
         fun day4_1() {
-            val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day4.txt").readText()
+//            val rawText =
+//                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day4.txt").readText()
 
+            var result = 0
+            val input = "yzbqklnj"
+//            val leadingZeros = 0
+            val md = MessageDigest.getInstance("MD5")
+            for (i in 1..10000000) {
+                val tmp = "$input$i"
+                val digest = md.digest(tmp.toByteArray())
+                val hash = digest.toHexString()
+                if(hash.startsWith("000000")) {
+                    result = i
+                    break
+                }
+            }
 
-
-            println("2015 day4.1: ")
+            println("2015 day4.1: $result")
         }
 
         fun advent2015() {
