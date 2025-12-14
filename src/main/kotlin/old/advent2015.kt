@@ -125,18 +125,18 @@ class Advent2015 {
 
             var result = 0
             val forbidden = listOf("ab", "cd", "pq", "xy")
+            val regex = "([a-zA-Z])\\1+".toRegex()
             rawText.forEach { line ->
-                if(forbidden.any { line.contains(it) }){
+                if (forbidden.any { line.contains(it) }) {
                     println("line_1")
                     return@forEach
                 }
-                val regex = "([a-zA-Z])\\1+".toRegex()
-                if(!regex.containsMatchIn(line)){
+                if (!regex.containsMatchIn(line)) {
                     println("line_2")
                     return@forEach
                 }
-                val tmp = line.replace("a","").replace("e","").replace("i","").replace("o","").replace("u","")
-                if(tmp.length + 3 > line.length){
+                val tmp = line.replace("a", "").replace("e", "").replace("i", "").replace("o", "").replace("u", "")
+                if (tmp.length + 3 > line.length) {
                     println("line_3: ${tmp.length},${line.length}")
                     return@forEach
                 }
@@ -148,7 +148,24 @@ class Advent2015 {
         }
 
         fun day5_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day5.txt").readLines()
 
+            var result = 0
+            val regex1 = "(.{2}).*\\1".toRegex()
+            val regex2 = "(.)?(.)\\1".toRegex()
+            rawText.forEach { line ->
+                if (!regex1.containsMatchIn(line)) {
+                    return@forEach
+                }
+                if (!regex2.containsMatchIn(line)) {
+                    return@forEach
+                }
+                result++
+            }
+
+
+            println("2015 day5.2: $result")
         }
 
         fun advent2015() {
@@ -158,8 +175,8 @@ class Advent2015 {
 //            day2_2()
 //            day3_1()
 //            day4_1()
-            day5_1()
-//            day5_2()
+//            day5_1()
+            day5_2()
         }
     }
 }
