@@ -469,13 +469,12 @@ class Advent2025 {
             rawText[0].split("\\s+".toRegex()).forEachIndexed { index, firstElement ->
                 var tmpResult = 0L + Integer.parseInt(firstElement)
                 if (operators[index].trim() == "+") {
-                    for(i in 1 until numOfLines - 1) {
+                    for (i in 1 until numOfLines - 1) {
                         tmpResult += rawText[i].split("\\s+".toRegex())[index].toLong()
                     }
-
                 }
                 if (operators[index].trim() == "*") {
-                    for(i in 1 until numOfLines - 1) {
+                    for (i in 1 until numOfLines - 1) {
                         tmpResult *= rawText[i].split("\\s+".toRegex())[index].toLong()
                     }
                 }
@@ -485,11 +484,33 @@ class Advent2025 {
             println("2025 day 6.1: $result")
         }
 
-        fun day6_2(){
+        fun day6_2() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
             var result = 0L
-
+            var operator = rawText[4][0]
+            var tmpResult = if(operator == '*') 1L else 0L
+            val row1Max = rawText[1].length
+            val row2Max = rawText[2].length
+            val row3Max = rawText[3].length
+            rawText[0].forEachIndexed { index, ch ->
+                if (ch == ' ' && rawText[1][index] == ' ' && rawText[2][index] == ' ' && rawText[3][index] == ' ') {
+                    operator = rawText[4][index + 1]
+                    result += tmpResult
+                    println("index: $index, $tmpResult")
+                    tmpResult = if(operator == '*') 1L else 0L
+                    return@forEachIndexed
+                }
+// 11044319456178 too low
+                if (operator == '+') {
+                    tmpResult += Integer.parseInt("$ch${if(index > row1Max - 1) "" else rawText[1][index]}${if(index > row2Max - 1) "" else rawText[2][index]}${if (index > row3Max - 1) "" else rawText[3][index]}".trim())
+                }
+                if (operator == '*') {
+                    tmpResult *= Integer.parseInt("$ch${if(index > row1Max - 1) "" else rawText[1][index]}${if(index > row2Max - 1) "" else rawText[2][index]}${if (index > row3Max - 1) "" else rawText[3][index]}".trim())
+                }
+            }
+            println("last: $tmpResult")
+            result += tmpResult
             println("2025 day 6.2: $result")
         }
 
