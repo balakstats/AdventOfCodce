@@ -110,7 +110,7 @@ class Advent2015 {
                 val tmp = "$input$i"
                 val digest = md.digest(tmp.toByteArray())
                 val hash = digest.toHexString()
-                if(hash.startsWith("000000")) {
+                if (hash.startsWith("000000")) {
                     result = i
                     break
                 }
@@ -119,13 +119,47 @@ class Advent2015 {
             println("2015 day4.1: $result")
         }
 
+        fun day5_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day5.txt").readLines()
+
+            var result = 0
+            val forbidden = listOf("ab", "cd", "pq", "xy")
+            rawText.forEach { line ->
+                if(forbidden.any { line.contains(it) }){
+                    println("line_1")
+                    return@forEach
+                }
+                val regex = "([a-zA-Z])\\1+".toRegex()
+                if(!regex.containsMatchIn(line)){
+                    println("line_2")
+                    return@forEach
+                }
+                val tmp = line.replace("a","").replace("e","").replace("i","").replace("o","").replace("u","")
+                if(tmp.length + 3 > line.length){
+                    println("line_3: ${tmp.length},${line.length}")
+                    return@forEach
+                }
+                result++
+            }
+
+
+            println("2015 day5.1: $result")
+        }
+
+        fun day5_2() {
+
+        }
+
         fun advent2015() {
 //            day1_1()
 //            day1_2()
 //            day2_1()
 //            day2_2()
 //            day3_1()
-            day4_1()
+//            day4_1()
+            day5_1()
+//            day5_2()
         }
     }
 }
