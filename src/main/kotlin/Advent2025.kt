@@ -445,7 +445,7 @@ class Advent2025 {
                 }
 
                 if (it.first <= distinctRanges.last().second) {
-                    if(it.second > distinctRanges.last().second) {
+                    if (it.second > distinctRanges.last().second) {
                         distinctRanges[distinctRanges.size - 1] = Pair(distinctRanges.last().first, it.second)
                     }
                 } else {
@@ -460,13 +460,37 @@ class Advent2025 {
             println("2025 day 5.2: $result")
         }
 
-        fun day6_1(){
+        fun day6_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
+            var result = 0L
+            val numOfLines = rawText.size
+            val operators = rawText[numOfLines - 1].split("\\s+".toRegex())
+            rawText[0].split("\\s+".toRegex()).forEachIndexed { index, firstElement ->
+                var tmpResult = 0L + Integer.parseInt(firstElement)
+                if (operators[index].trim() == "+") {
+                    for(i in 1 until numOfLines - 1) {
+                        tmpResult += rawText[i].split("\\s+".toRegex())[index].toLong()
+                    }
+
+                }
+                if (operators[index].trim() == "*") {
+                    for(i in 1 until numOfLines - 1) {
+                        tmpResult *= rawText[i].split("\\s+".toRegex())[index].toLong()
+                    }
+                }
+                result += tmpResult
+            }
+
+            println("2025 day 6.1: $result")
+        }
+
+        fun day6_2(){
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
             var result = 0L
 
-            
-            println("2025 day 6.1: ")
+            println("2025 day 6.2: $result")
         }
 
         fun advent2025() {
@@ -481,8 +505,8 @@ class Advent2025 {
 //            day4_2()
 //            day5_1()
 //            day5_2()
-            day6_1()
-//            day6_2()
+//            day6_1()
+            day6_2()
         }
 
 

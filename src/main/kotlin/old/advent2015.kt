@@ -168,6 +168,23 @@ class Advent2015 {
             println("2015 day5.2: $result")
         }
 
+        fun day6_1(){
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day6.txt").readLines()
+
+
+
+            println("2015 day6.1: ")
+        }
+
+        fun day6_2(){
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day6.txt").readLines()
+
+
+            println("2015 day6.2: ")
+        }
+
         fun advent2015() {
 //            day1_1()
 //            day1_2()
@@ -176,7 +193,9 @@ class Advent2015 {
 //            day3_1()
 //            day4_1()
 //            day5_1()
-            day5_2()
+//            day5_2()
+            day6_1()
+            day6_2()
         }
     }
 }
