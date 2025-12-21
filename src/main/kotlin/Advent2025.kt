@@ -489,7 +489,7 @@ class Advent2025 {
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
             var result = 0L
             var operator = rawText[4][0]
-            var tmpResult = if(operator == '*') 1L else 0L
+            var tmpResult = if (operator == '*') 1L else 0L
             val row1Max = rawText[1].length
             val row2Max = rawText[2].length
             val row3Max = rawText[3].length
@@ -498,20 +498,60 @@ class Advent2025 {
                     operator = rawText[4][index + 1]
                     result += tmpResult
                     println("index: $index, $tmpResult")
-                    tmpResult = if(operator == '*') 1L else 0L
+                    tmpResult = if (operator == '*') 1L else 0L
                     return@forEachIndexed
                 }
-// 11044319456178 too low
+
                 if (operator == '+') {
-                    tmpResult += Integer.parseInt("$ch${if(index > row1Max - 1) "" else rawText[1][index]}${if(index > row2Max - 1) "" else rawText[2][index]}${if (index > row3Max - 1) "" else rawText[3][index]}".trim())
+                    tmpResult += Integer.parseInt("$ch${if (index > row1Max - 1) "" else rawText[1][index]}${if (index > row2Max - 1) "" else rawText[2][index]}${if (index > row3Max - 1) "" else rawText[3][index]}".trim())
                 }
                 if (operator == '*') {
-                    tmpResult *= Integer.parseInt("$ch${if(index > row1Max - 1) "" else rawText[1][index]}${if(index > row2Max - 1) "" else rawText[2][index]}${if (index > row3Max - 1) "" else rawText[3][index]}".trim())
+                    tmpResult *= Integer.parseInt("$ch${if (index > row1Max - 1) "" else rawText[1][index]}${if (index > row2Max - 1) "" else rawText[2][index]}${if (index > row3Max - 1) "" else rawText[3][index]}".trim())
                 }
             }
             println("last: $tmpResult")
             result += tmpResult
             println("2025 day 6.2: $result")
+        }
+
+        fun day7_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day7.txt").readLines()
+            var result = 0L
+
+            val lineLength = rawText[0].length
+            val beams = mutableListOf(rawText[0].indexOfFirst { it == 'S' })
+            rawText.forEachIndexed { index, string ->
+                if (index % 2 != 0 || index == 0) {
+                    return@forEachIndexed
+                }
+
+                string.forEachIndexed { index, ch ->
+                    if (ch == '^') {
+                        val beam = beams.firstOrNull { it == index }
+                        if (beam != null) {
+                            result++
+                            beams.removeAll { it == index }
+                            if (index > 0) {
+                                beams.add(index - 1)
+                            }
+                            if (index < lineLength - 2) {
+                                beams.add(index + 1)
+                            }
+                        }
+                    }
+                }
+            }
+
+            println("2025 day 7.1: $result")
+        }
+
+        fun day7_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day7.txt").readLines()
+            var result = 0L
+
+            println("2025 day 7.2: $result")
         }
 
         fun advent2025() {
@@ -527,7 +567,9 @@ class Advent2025 {
 //            day5_1()
 //            day5_2()
 //            day6_1()
-            day6_2()
+//            day6_2()
+            day7_1()
+//            day7_2()
         }
 
 
