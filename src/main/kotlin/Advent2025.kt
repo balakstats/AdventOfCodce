@@ -551,6 +551,8 @@ class Advent2025 {
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day7.txt").readLines()
             var result = 0L
 
+
+
             println("2025 day 7.2: $result")
         }
 
@@ -568,8 +570,8 @@ class Advent2025 {
 //            day5_2()
 //            day6_1()
 //            day6_2()
-            day7_1()
-//            day7_2()
+//            day7_1()
+            day7_2()
         }
 
 
