@@ -2126,29 +2126,39 @@ class Advent2024 {
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
 
             val patterns = map[0].split(", ").sortedBy { it.length }.reversed()
-//            println(patterns)
-            val designs = map.subList(2, map.size)
+            val designs = map.subList(2, map.size).filter { !it.startsWith("wrbbr") }
 
             var good = 0
-            var bad = 0
-            val badPattern = mutableListOf<String>()
             designs.forEach { design ->
-                var result = design
-                run empty@{
-                    patterns.forEach { pattern ->
-                        result = result.replace(pattern, "")
-                        if (result.isEmpty()) {
-                            good++
-                            return@empty
+                var result = mutableSetOf(design)
+//                var length = design.length
+//                var newLength = 0
+                loop@ while (true) {
+//                    length = result.length
+//                    newLength = result.length
+                    var newResult = mutableSetOf<String>()
+                    result.forEach { tmpDesign ->
+                        patterns.forEach { pattern ->
+                            if (tmpDesign.startsWith(pattern)) {
+                                val tmp = tmpDesign.replace(pattern, "")
+                                if(tmp.isEmpty()){
+                                    println("good: $design")
+                                    good++
+                                    break@loop
+                                }
+                                newResult.add(tmp)
+                            }
                         }
                     }
-                    badPattern.add(result)
-                    bad++
+                    if(result == newResult){
+                        println("bad: $design")
+                        break@loop
+                    }
+                    result = newResult
                 }
             }
-            println(badPattern)
+
             println("good: $good")
-            println("bad: $bad")
             println("2024 day 19.1: ")
         }
 
