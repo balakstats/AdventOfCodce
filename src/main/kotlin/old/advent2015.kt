@@ -1,6 +1,5 @@
 package old
 
-import org.apache.commons.lang3.math.NumberUtils.max
 import java.io.File
 import java.security.MessageDigest
 
@@ -227,10 +226,15 @@ class Advent2015 {
         fun day6_2() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day6.txt").readLines()
-            var result = 0L
 
-            val matrix = Array(1000) { Array(1000) {0} }
-            fun getNumber(line: String, remove: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {
+            val turnOff = "turn off"
+            val turnOn = "turn on"
+            val toggle = "toggle"
+            var result: Long
+
+            val matrix = Array(1000) { Array(1000) { 0 } }
+
+            fun getCoordinates(line: String, remove: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {
                 val startX = line.replace(remove, "").split("through")[0].trim().split(",")[0].toInt()
                 val startY = line.replace(remove, "").split("through")[0].trim().split(",")[1].toInt()
                 val endX = line.replace(remove, "").split("through")[1].trim().split(",")[0].toInt()
@@ -239,47 +243,27 @@ class Advent2015 {
                 return Pair(startX, startY) to Pair(endX, endY)
             }
 
-            fun turnOff(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>) {
-                for (x in coordinates.first.first..coordinates.second.first) {
-                    for (y in coordinates.first.second..coordinates.second.second) {
-                        matrix[x][y] = 0.coerceAtLeast(matrix[x][y] - 1)
+            fun calcBulbLit(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>, operation: String) {
+                (coordinates.first.first..coordinates.second.first).forEach { x ->
+                    (coordinates.first.second..coordinates.second.second).forEach { y ->
+                        when (operation) {
+                            turnOff -> matrix[x][y] = 0.coerceAtLeast(matrix[x][y] - 1)
+                            turnOn -> matrix[x][y] += 1
+                            toggle -> matrix[x][y] += 2
+                        }
                     }
                 }
             }
 
-            fun turnOn(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>) {
-                for (x in coordinates.first.first..coordinates.second.first) {
-                    for (y in coordinates.first.second..coordinates.second.second) {
-                        matrix[x][y] += 1
-                    }
-                }
-            }
-
-            fun toggle(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>) {
-                for (x in coordinates.first.first..coordinates.second.first) {
-                    for (y in coordinates.first.second..coordinates.second.second) {
-                        matrix[x][y] += 2
-                    }
-                }
-            }
-
-            val turnOff = "turn off"
-            val turnOn = "turn on"
-            val toggle = "toggle"
             rawText.forEach { line ->
-                if (line.startsWith(turnOff)) {
-                    turnOff(getNumber(line, turnOff))
-                } else if (line.startsWith(turnOn)) {
-                    turnOn(getNumber(line, turnOn))
-                } else if (line.startsWith(toggle)) {
-                    toggle(getNumber(line, toggle))
+                when {
+                    line.startsWith(turnOff) -> calcBulbLit(getCoordinates(line, turnOff), turnOff)
+                    line.startsWith(turnOn) -> calcBulbLit(getCoordinates(line, turnOn), turnOn)
+                    line.startsWith(toggle) -> calcBulbLit(getCoordinates(line, toggle), toggle)
                 }
             }
 
-            matrix.flatMap { it.toList() }.forEach {
-                result += it
-            }
-
+            result = matrix.flatMap { it.toList() }.sum().toLong()
             println("2015 day6.2: $result")
         }
 
@@ -287,6 +271,7 @@ class Advent2015 {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day7.txt").readLines()
             var result = 0
+
 
 
             println("2015 day7.1: $result")
