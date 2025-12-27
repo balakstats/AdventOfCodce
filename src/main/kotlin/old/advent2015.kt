@@ -1,5 +1,6 @@
 package old
 
+import org.apache.commons.lang3.math.NumberUtils.max
 import java.io.File
 import java.security.MessageDigest
 
@@ -170,10 +171,10 @@ class Advent2015 {
         fun day6_1() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day6.txt").readLines()
-            var result = 0
+            var result: Int
 
             val matrix = Array(1000) { arrayOfNulls<Int>(1000) }
-            fun getNumber(line: String, remove: String, position: Int): Pair<Pair<Int, Int>, Pair<Int, Int>> {
+            fun getNumber(line: String, remove: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {
                 val startX = line.replace(remove, "").split("through")[0].trim().split(",")[0].toInt()
                 val startY = line.replace(remove, "").split("through")[0].trim().split(",")[1].toInt()
                 val endX = line.replace(remove, "").split("through")[1].trim().split(",")[0].toInt()
@@ -183,7 +184,6 @@ class Advent2015 {
             }
 
             fun turnOff(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>) {
-//                println("$coordinates")
                 for (x in coordinates.first.first..coordinates.second.first) {
                     for (y in coordinates.first.second..coordinates.second.second) {
                         matrix[x][y] = null
@@ -212,11 +212,11 @@ class Advent2015 {
             val toggle = "toggle"
             rawText.forEach { line ->
                 if (line.startsWith(turnOff)) {
-                    turnOff(getNumber(line, turnOff, 0))
+                    turnOff(getNumber(line, turnOff))
                 } else if (line.startsWith(turnOn)) {
-                    turnOn(getNumber(line, turnOn, 0))
+                    turnOn(getNumber(line, turnOn))
                 } else if (line.startsWith(toggle)) {
-                    toggle(getNumber(line, toggle, 0))
+                    toggle(getNumber(line, toggle))
                 }
             }
 
@@ -227,10 +227,78 @@ class Advent2015 {
         fun day6_2() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day6.txt").readLines()
+            var result = 0L
+
+            val matrix = Array(1000) { Array(1000) {0} }
+            fun getNumber(line: String, remove: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {
+                val startX = line.replace(remove, "").split("through")[0].trim().split(",")[0].toInt()
+                val startY = line.replace(remove, "").split("through")[0].trim().split(",")[1].toInt()
+                val endX = line.replace(remove, "").split("through")[1].trim().split(",")[0].toInt()
+                val endY = line.replace(remove, "").split("through")[1].trim().split(",")[1].toInt()
+
+                return Pair(startX, startY) to Pair(endX, endY)
+            }
+
+            fun turnOff(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>) {
+                for (x in coordinates.first.first..coordinates.second.first) {
+                    for (y in coordinates.first.second..coordinates.second.second) {
+                        matrix[x][y] = 0.coerceAtLeast(matrix[x][y] - 1)
+                    }
+                }
+            }
+
+            fun turnOn(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>) {
+                for (x in coordinates.first.first..coordinates.second.first) {
+                    for (y in coordinates.first.second..coordinates.second.second) {
+                        matrix[x][y] += 1
+                    }
+                }
+            }
+
+            fun toggle(coordinates: Pair<Pair<Int, Int>, Pair<Int, Int>>) {
+                for (x in coordinates.first.first..coordinates.second.first) {
+                    for (y in coordinates.first.second..coordinates.second.second) {
+                        matrix[x][y] += 2
+                    }
+                }
+            }
+
+            val turnOff = "turn off"
+            val turnOn = "turn on"
+            val toggle = "toggle"
+            rawText.forEach { line ->
+                if (line.startsWith(turnOff)) {
+                    turnOff(getNumber(line, turnOff))
+                } else if (line.startsWith(turnOn)) {
+                    turnOn(getNumber(line, turnOn))
+                } else if (line.startsWith(toggle)) {
+                    toggle(getNumber(line, toggle))
+                }
+            }
+
+            matrix.flatMap { it.toList() }.forEach {
+                result += it
+            }
+
+            println("2015 day6.2: $result")
+        }
+
+        fun day7_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day7.txt").readLines()
             var result = 0
 
 
-            println("2015 day6.2: $result")
+            println("2015 day7.1: $result")
+        }
+
+        fun day7_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day7.txt").readLines()
+            var result = 0
+
+
+            println("2015 day7.2: $result")
         }
 
         fun advent2015() {
@@ -242,8 +310,10 @@ class Advent2015 {
 //            day4_1()
 //            day5_1()
 //            day5_2()
-            day6_1()
-//            day6_2()
+//            day6_1()
+            day6_2()
+//            day7_1()
+//            day7_2()
         }
     }
 }
