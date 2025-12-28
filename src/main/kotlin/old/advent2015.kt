@@ -234,11 +234,15 @@ class Advent2015 {
 
             val matrix = Array(1000) { Array(1000) { 0 } }
 
+            fun parseCoordinateOfCorner(line: String, remove: String, corner: Pair<Int, Int>): Int {
+                return line.replace(remove, "").split("through")[corner.first].trim().split(",")[corner.second].toInt()
+            }
+
             fun getCoordinates(line: String, remove: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {
-                val startX = line.replace(remove, "").split("through")[0].trim().split(",")[0].toInt()
-                val startY = line.replace(remove, "").split("through")[0].trim().split(",")[1].toInt()
-                val endX = line.replace(remove, "").split("through")[1].trim().split(",")[0].toInt()
-                val endY = line.replace(remove, "").split("through")[1].trim().split(",")[1].toInt()
+                val startX = parseCoordinateOfCorner(line, remove, Pair(0, 0))
+                val startY = parseCoordinateOfCorner(line, remove, Pair(0, 1))
+                val endX = parseCoordinateOfCorner(line, remove, Pair(1, 0))
+                val endY = parseCoordinateOfCorner(line, remove, Pair(1, 1))
 
                 return Pair(startX, startY) to Pair(endX, endY)
             }
@@ -270,17 +274,122 @@ class Advent2015 {
         fun day7_1() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day7.txt").readLines()
+                    .toMutableList()
             var result = 0
+            val AND = "AND"
+            val OR = "OR"
+            val RSHIFT = "RSHIFT"
+            val LSHIFT = "LSHIFT"
+            val NOT = "NOT"
 
+            val allWires = mutableMapOf<String, UShort>()
+//            val regexAllWires = Regex(" [a-z]+$")
+//            rawText.forEach {
+//                val matches = regexAllWires.find(it)
+//                if (matches != null) {
+//                    allWires[matches.value.trim()] = 0
+//                }
+//            }
+            val regexReadyWires = Regex("^\\d+ ->")
+            var iterator = rawText.iterator()
+            while (iterator.hasNext()) {
+                val tmp = iterator.next()
+                val matches = regexReadyWires.find(tmp)
+                if (matches != null) {
+                    println("put: ${matches.value}")
+                    allWires[tmp.split(" -> ")[1]] = tmp.split(" -> ")[0].toUShort()
+                    iterator.remove()
+                }
+            }
+            fun calcAND(line: String, iterator: MutableIterator<String>) {
+                println("$AND: $line")
+                val operandA = line.split(" -> ")[0].split(" $AND ")[0]
+                val operandB = line.split(" -> ")[0].split(" $AND ")[1]
+                val assignTo = line.split(" -> ")[1]
+                if(operandA.all { it.isDigit() } && operandB.all { it.isDigit() }) {
+                    allWires[assignTo] = (operandA.toInt() and operandB.toInt()).toUShort()
+                    iterator.remove()
+                    return
+                }
+                if(operandA.all { it.isDigit() } && allWires[operandB] != null) {
+                    allWires[assignTo] = (operandA.toInt() and allWires[operandB]!!.toInt()).toUShort()
+                    iterator.remove()
+                    return
+                }
+                if(allWires[operandA] != null && operandB.all { it.isDigit() } ) {
+                    allWires[assignTo] = (allWires[operandA]!!.toInt() and operandB.toInt()).toUShort()
+                    iterator.remove()
+                    return
+                }
+                if(allWires[operandA] != null && allWires[operandB] != null) {
+                    allWires[assignTo] = (allWires[operandA]!!.toInt() and allWires[operandB]!!.toInt()).toUShort()
+                    iterator.remove()
+                }
+            }
+            fun calcRSHIFT(line: String, iterator: MutableIterator<String>) {
+                println("$RSHIFT: $line")
+                val operandA = line.split(" -> ")[0].split(" $RSHIFT ")[0]
+                val operandB = line.split(" -> ")[0].split(" $RSHIFT ")[1].toInt()
+                val assignTo = line.split(" -> ")[1]
+                if(allWires[operandA] != null){
+                    allWires[assignTo] = (allWires[operandA]!!.toInt() shr operandB).toUShort()
+                    iterator.remove()
+                }
+            }
+            fun calcLSHIFT(line: String, iterator: MutableIterator<String>) {
+                println("$LSHIFT: $line")
+                val operandA = line.split(" -> ")[0].split(" $LSHIFT ")[0]
+                val operandB = line.split(" -> ")[0].split(" $LSHIFT ")[1].toInt()
+                val assignTo = line.split(" -> ")[1]
+                if(allWires[operandA] != null){
+                    allWires[assignTo] = (allWires[operandA]!!.toInt() shl operandB).toUShort()
+                    iterator.remove()
+                }
+            }
+            fun calcOR(line: String, iterator: MutableIterator<String>) {
+                println("$OR: $line")
+                val operandA = line.split(" -> ")[0].split(" $OR ")[0]
+                val operandB = line.split(" -> ")[0].split(" $OR ")[1]
+                val assignTo = line.split(" -> ")[1]
+                if(allWires[operandA] != null && allWires[operandB] != null) {
+                    allWires[assignTo] = (allWires[operandA]!!.toInt() or allWires[operandB]!!.toInt()).toUShort()
+                    iterator.remove()
+                }
+            }
+            fun calcNOT(line: String, iterator: MutableIterator<String>) {
+                println("$NOT: $line")
+                val operandA = line.split(" -> ")[0].split(" ")[1]
+                val assignTo = line.split(" -> ")[1]
+                if(allWires[operandA] != null){
+                    allWires[assignTo] = allWires[operandA]!!.toInt().inv().toUShort()
+                    iterator.remove()
+                }
+            }
+            while (rawText.size > 1) {
+                iterator = rawText.iterator()
+                while (iterator.hasNext()) {
+                    val tmp = iterator.next()
+                    when{
+                        tmp.contains(AND) -> calcAND(tmp, iterator)
+                        tmp.contains(RSHIFT) -> calcRSHIFT(tmp, iterator)
+                        tmp.contains(OR) -> calcOR(tmp, iterator)
+                        tmp.contains(NOT) -> calcNOT(tmp, iterator)
+                        tmp.contains(LSHIFT) -> calcLSHIFT(tmp, iterator)
+                    }
+                }
+            }
 
-
+            println(allWires)
+            result = allWires["lx"]?.toInt() ?: -1
             println("2015 day7.1: $result")
         }
+
 
         fun day7_2() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day7.txt").readLines()
             var result = 0
+
 
 
             println("2015 day7.2: $result")
@@ -296,9 +405,9 @@ class Advent2015 {
 //            day5_1()
 //            day5_2()
 //            day6_1()
-            day6_2()
+//            day6_2()
 //            day7_1()
-//            day7_2()
+            day7_2()
         }
     }
 }
