@@ -299,61 +299,65 @@ class Advent2015 {
                 val operandA = line.split(" -> ")[0].split(" $AND ")[0]
                 val operandB = line.split(" -> ")[0].split(" $AND ")[1]
                 val assignTo = line.split(" -> ")[1]
-                if(operandA.all { it.isDigit() } && operandB.all { it.isDigit() }) {
+                if (operandA.all { it.isDigit() } && operandB.all { it.isDigit() }) {
                     allWires[assignTo] = (operandA.toInt() and operandB.toInt()).toUShort()
                     iterator.remove()
                     return
                 }
-                if(operandA.all { it.isDigit() } && allWires[operandB] != null) {
+                if (operandA.all { it.isDigit() } && allWires[operandB] != null) {
                     allWires[assignTo] = (operandA.toInt() and allWires[operandB]!!.toInt()).toUShort()
                     iterator.remove()
                     return
                 }
-                if(allWires[operandA] != null && operandB.all { it.isDigit() } ) {
+                if (allWires[operandA] != null && operandB.all { it.isDigit() }) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() and operandB.toInt()).toUShort()
                     iterator.remove()
                     return
                 }
-                if(allWires[operandA] != null && allWires[operandB] != null) {
+                if (allWires[operandA] != null && allWires[operandB] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() and allWires[operandB]!!.toInt()).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcRSHIFT(line: String, iterator: MutableIterator<String>) {
                 println("$RSHIFT: $line")
                 val operandA = line.split(" -> ")[0].split(" $RSHIFT ")[0]
                 val operandB = line.split(" -> ")[0].split(" $RSHIFT ")[1].toInt()
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null){
+                if (allWires[operandA] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() shr operandB).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcLSHIFT(line: String, iterator: MutableIterator<String>) {
                 println("$LSHIFT: $line")
                 val operandA = line.split(" -> ")[0].split(" $LSHIFT ")[0]
                 val operandB = line.split(" -> ")[0].split(" $LSHIFT ")[1].toInt()
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null){
+                if (allWires[operandA] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() shl operandB).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcOR(line: String, iterator: MutableIterator<String>) {
                 println("$OR: $line")
                 val operandA = line.split(" -> ")[0].split(" $OR ")[0]
                 val operandB = line.split(" -> ")[0].split(" $OR ")[1]
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null && allWires[operandB] != null) {
+                if (allWires[operandA] != null && allWires[operandB] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() or allWires[operandB]!!.toInt()).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcNOT(line: String, iterator: MutableIterator<String>) {
                 println("$NOT: $line")
                 val operandA = line.split(" -> ")[0].split(" ")[1]
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null){
+                if (allWires[operandA] != null) {
                     allWires[assignTo] = allWires[operandA]!!.toInt().inv().toUShort()
                     iterator.remove()
                 }
@@ -362,7 +366,7 @@ class Advent2015 {
                 iterator = rawText.iterator()
                 while (iterator.hasNext()) {
                     val tmp = iterator.next()
-                    when{
+                    when {
                         tmp.contains(AND) -> calcAND(tmp, iterator)
                         tmp.contains(RSHIFT) -> calcRSHIFT(tmp, iterator)
                         tmp.contains(OR) -> calcOR(tmp, iterator)
@@ -380,7 +384,8 @@ class Advent2015 {
 
         fun day7_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day7.txt").readLines().toMutableList()
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day7.txt").readLines()
+                    .toMutableList()
             var result: Int
             val AND = "AND"
             val OR = "OR"
@@ -395,9 +400,15 @@ class Advent2015 {
                 val tmp = iterator.next()
                 val matches = regexReadyWires.find(tmp)
                 if (matches != null) {
-                    println("put: ${matches.value}")
-                    allWires[tmp.split(" -> ")[1]] = tmp.split(" -> ")[0].toUShort()
-                    iterator.remove()
+                    if (tmp.split(" -> ")[1] == "b") {
+                        println("put: 16076")
+                        allWires[tmp.split(" -> ")[1]] = 16076u
+                        iterator.remove()
+                    } else {
+                        println("put: ${matches.value}")
+                        allWires[tmp.split(" -> ")[1]] = tmp.split(" -> ")[0].toUShort()
+                        iterator.remove()
+                    }
                 }
             }
             fun calcAND(line: String, iterator: MutableIterator<String>) {
@@ -405,61 +416,65 @@ class Advent2015 {
                 val operandA = line.split(" -> ")[0].split(" $AND ")[0]
                 val operandB = line.split(" -> ")[0].split(" $AND ")[1]
                 val assignTo = line.split(" -> ")[1]
-                if(operandA.all { it.isDigit() } && operandB.all { it.isDigit() }) {
+                if (operandA.all { it.isDigit() } && operandB.all { it.isDigit() }) {
                     allWires[assignTo] = (operandA.toInt() and operandB.toInt()).toUShort()
                     iterator.remove()
                     return
                 }
-                if(operandA.all { it.isDigit() } && allWires[operandB] != null) {
+                if (operandA.all { it.isDigit() } && allWires[operandB] != null) {
                     allWires[assignTo] = (operandA.toInt() and allWires[operandB]!!.toInt()).toUShort()
                     iterator.remove()
                     return
                 }
-                if(allWires[operandA] != null && operandB.all { it.isDigit() } ) {
+                if (allWires[operandA] != null && operandB.all { it.isDigit() }) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() and operandB.toInt()).toUShort()
                     iterator.remove()
                     return
                 }
-                if(allWires[operandA] != null && allWires[operandB] != null) {
+                if (allWires[operandA] != null && allWires[operandB] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() and allWires[operandB]!!.toInt()).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcRSHIFT(line: String, iterator: MutableIterator<String>) {
                 println("$RSHIFT: $line")
                 val operandA = line.split(" -> ")[0].split(" $RSHIFT ")[0]
                 val operandB = line.split(" -> ")[0].split(" $RSHIFT ")[1].toInt()
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null){
+                if (allWires[operandA] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() shr operandB).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcLSHIFT(line: String, iterator: MutableIterator<String>) {
                 println("$LSHIFT: $line")
                 val operandA = line.split(" -> ")[0].split(" $LSHIFT ")[0]
                 val operandB = line.split(" -> ")[0].split(" $LSHIFT ")[1].toInt()
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null){
+                if (allWires[operandA] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() shl operandB).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcOR(line: String, iterator: MutableIterator<String>) {
                 println("$OR: $line")
                 val operandA = line.split(" -> ")[0].split(" $OR ")[0]
                 val operandB = line.split(" -> ")[0].split(" $OR ")[1]
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null && allWires[operandB] != null) {
+                if (allWires[operandA] != null && allWires[operandB] != null) {
                     allWires[assignTo] = (allWires[operandA]!!.toInt() or allWires[operandB]!!.toInt()).toUShort()
                     iterator.remove()
                 }
             }
+
             fun calcNOT(line: String, iterator: MutableIterator<String>) {
                 println("$NOT: $line")
                 val operandA = line.split(" -> ")[0].split(" ")[1]
                 val assignTo = line.split(" -> ")[1]
-                if(allWires[operandA] != null){
+                if (allWires[operandA] != null) {
                     allWires[assignTo] = allWires[operandA]!!.toInt().inv().toUShort()
                     iterator.remove()
                 }
@@ -468,7 +483,7 @@ class Advent2015 {
                 iterator = rawText.iterator()
                 while (iterator.hasNext()) {
                     val tmp = iterator.next()
-                    when{
+                    when {
                         tmp.contains(AND) -> calcAND(tmp, iterator)
                         tmp.contains(RSHIFT) -> calcRSHIFT(tmp, iterator)
                         tmp.contains(OR) -> calcOR(tmp, iterator)
@@ -483,6 +498,24 @@ class Advent2015 {
             println("2015 day7.1: $result")
         }
 
+        fun day8_1() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day8.txt").readLines()
+            var result = 0
+
+
+
+            println("2015 day8.1: $result")
+        }
+
+        fun day8_2() {
+            val rawText =
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day8.txt").readLines()
+            var result = 0
+
+            println("2015 day8.2: $result")
+        }
+
         fun advent2015() {
 //            day1_1()
 //            day1_2()
@@ -495,7 +528,9 @@ class Advent2015 {
 //            day6_1()
 //            day6_2()
 //            day7_1()
-            day7_2()
+//            day7_2()
+            day8_1()
+//            day8_2()
         }
     }
 }
