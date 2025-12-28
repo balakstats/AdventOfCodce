@@ -2131,26 +2131,23 @@ class Advent2024 {
             var good = 0
             designs.forEach { design ->
                 var result = mutableSetOf(design)
-//                var length = design.length
-//                var newLength = 0
                 loop@ while (true) {
-//                    length = result.length
-//                    newLength = result.length
-                    var newResult = mutableSetOf<String>()
+                    val newResult = mutableSetOf<String>()
                     result.forEach { tmpDesign ->
                         patterns.forEach { pattern ->
                             if (tmpDesign.startsWith(pattern)) {
-                                val tmp = tmpDesign.replace(pattern, "")
-                                if(tmp.isEmpty()){
+                                val tmp = tmpDesign.replaceFirst(pattern, "")
+                                if (tmp.isEmpty()) {
                                     println("good: $design")
                                     good++
                                     break@loop
                                 }
                                 newResult.add(tmp)
+
                             }
                         }
                     }
-                    if(result == newResult){
+                    if (result == newResult) {
                         println("bad: $design")
                         break@loop
                     }
@@ -2158,15 +2155,47 @@ class Advent2024 {
                 }
             }
 
-            println("good: $good")
-            println("2024 day 19.1: ")
+            println("2024 day 19.1: $good")
         }
 
         fun day19_2() {
             val map =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
 
-            println(map)
+            val patterns = map[0].split(", ").sortedBy { it.length }.reversed()
+            val designs = map.subList(2, map.size).filter { !it.startsWith("wrbbr") }
+
+            var good = 0
+            designs.forEach { design ->
+                var result = mutableSetOf(design)
+                loop@ while (true) {
+                    val newResult = mutableSetOf<String>()
+                    result.forEach { tmpDesign ->
+                        patterns.forEach { pattern ->
+                            if (tmpDesign.startsWith(pattern)) {
+                                println("start: $pattern")
+                                val tmp = tmpDesign.replaceFirst(pattern, "")
+                                if (tmp.isEmpty()) {
+                                    println("good: $design")
+                                    good++
+                                } else {
+                                    newResult.add(tmp)
+                                }
+                            }
+                        }
+                    }
+                    println("---------------------")
+//                    if (result == newResult) {
+                    if (newResult.isEmpty()) {
+                        println("bad: $design")
+                        break@loop
+                    }
+                    result = newResult
+                }
+            }
+
+            // too low 223084
+            println("2024 day 19.2: $good")
         }
 
         fun day20_1() {
@@ -2298,8 +2327,8 @@ class Advent2024 {
 //            day17_2()
 //            day18_1()
 //            day18_2()
-            day19_1()
-//            day19_2()
+//            day19_1()
+            day19_2()
 //            day20_1()
 //            day20_2()
 //            day21_1()
