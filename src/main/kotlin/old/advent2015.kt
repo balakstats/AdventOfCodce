@@ -501,11 +501,35 @@ class Advent2015 {
         fun day8_1() {
             val rawText =
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2015\\day8.txt").readLines()
-            var result = 0
 
+            var allCharacters = 0
+            var charsInMemory = 0
+            val BACKSLASH = 92.toByte()
+            val QUOTA = 34.toByte()
+            val x = 120.toByte()
+            rawText.forEach { line ->
+                val raw = line.toByteArray().iterator()
+                while(raw.hasNext()) {
+                    allCharacters++
+                    val tmp = raw.next()
+                    if(tmp == QUOTA) {
+                        continue
+                    }
+                    if(tmp == BACKSLASH){
+                        allCharacters++
+                        val next = raw.next()
+                        if(next == x){
+                            allCharacters += 2
+                            raw.next()
+                            raw.next()
+                        }
+                    }
+                    charsInMemory++
+                }
+            }
 
-
-            println("2015 day8.1: $result")
+            println("$charsInMemory: $allCharacters")
+            println("2015 day8.1: ${allCharacters - charsInMemory}")
         }
 
         fun day8_2() {
