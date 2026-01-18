@@ -1,3 +1,4 @@
+import org.w3c.dom.ls.LSOutput
 import java.io.File
 import kotlin.collections.indexOfFirst
 
@@ -519,7 +520,6 @@ class Advent2025 {
                 File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day7.txt").readLines()
             var result = 0L
 
-            val lineLength = rawText[0].length
             val beams = mutableListOf(rawText[0].indexOfFirst { it == 'S' })
             rawText.forEachIndexed { index, string ->
                 if (index % 2 != 0 || index == 0) {
@@ -532,12 +532,8 @@ class Advent2025 {
                         if (beam != null) {
                             result++
                             beams.removeAll { it == index }
-                            if (index > 0) {
-                                beams.add(index - 1)
-                            }
-                            if (index < lineLength - 2) {
-                                beams.add(index + 1)
-                            }
+                            beams.add(index - 1)
+                            beams.add(index + 1)
                         }
                     }
                 }
@@ -570,8 +566,8 @@ class Advent2025 {
 //            day5_2()
 //            day6_1()
 //            day6_2()
-//            day7_1()
-            day7_2()
+            day7_1()
+//            day7_2()
         }
 
 
