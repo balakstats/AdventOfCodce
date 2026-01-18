@@ -7,10 +7,6 @@ class Utils {
             return File(absolutePath).readLines().map { it.toInt() }
         }
 
-        fun readStringCsv(absolutePath: String): List<String> {
-            return File(absolutePath).readLines()
-        }
-
         fun isReportSafe(list: List<Int>): Boolean {
             val numbersIterator = list.iterator()
             var previousNumber = -1
