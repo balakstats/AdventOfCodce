@@ -3,7 +3,6 @@ package old
 import Utils.Companion.calculateGCD
 import Utils.Companion.isReportSafe
 import Utils.Companion.readIntCsv
-import Utils.Companion.readStringCsv
 import org.jgrapht.Graph
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath
 import org.jgrapht.graph.DefaultEdge
@@ -25,11 +24,8 @@ class Advent2024 {
             val list2 =
                 readIntCsv("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day1_list2.csv").sorted()
                     .toSet()
-            var result = 0
-            list1.zip(list2).forEach { pair ->
-                result += abs(pair.component1() - pair.component2())
-            }
-            println("2024 day 01.1: $result")
+
+            println("2024 day 01.1: ${list1.zip(list2).sumOf { abs(it.component1() - it.component2()) }}")
         }
 
         fun day1_2() { // 19457120
@@ -40,32 +36,21 @@ class Advent2024 {
             val commonList = list1.intersect(list2)
             val frequencies = list1.groupingBy { it }.eachCount()
             val filteredFrequencies = frequencies.filterKeys { commonList.contains(it) }
-            var result = 0
-            filteredFrequencies.forEach { (key, value) ->
-                result += (key * value)
-            }
-            println("2024 day 01.2: $result")
+
+            println("2024 day 01.2: ${filteredFrequencies.map { it.key * it.value }.sum()}")
         }
 
         fun day2_1() { // 269
             val rawList =
-                readStringCsv("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day2_list1.csv")
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day2.txt").readLines()
             val reducedList =
                 rawList.map { line -> line.split(" ").map { it.toInt() } }.filter { it.size == it.toSet().size }
             val steadyIncreasingList = reducedList.filter { it.sorted() == it }
             val steadyDecreasingList = reducedList.filter { it.sortedDescending() == it }
 
             var result = 0
-            fun inner(list: List<List<Int>>): Int {
-                var temp = 0
-                list.forEach {
-                    temp += if (isReportSafe(it)) 1 else 0
-                }
-                return temp
-            }
-
-            result += inner(steadyIncreasingList)
-            result += inner(steadyDecreasingList)
+            result += steadyIncreasingList.sumOf { if (isReportSafe(it)) 1 else 0 }
+            result += steadyDecreasingList.sumOf { if (isReportSafe(it)) 1 else 0 }
 
             println("2024 day 02.1: $result")
         }
@@ -73,7 +58,7 @@ class Advent2024 {
         fun day2_2() { // 337
             val numberOfSafeReports = 269 // safe reports
             val rawSet =
-                readStringCsv("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day2_list1.csv").toSet()
+                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day2.txt").readLines()
             val reducedSet =
                 rawSet.map { line -> line.split(" ").map { it.toInt() } }
                     .filter { abs(it.size - it.toSet().size) < 2 }.toSet()
@@ -82,25 +67,15 @@ class Advent2024 {
                 rawSet.map { line -> line.split(" ").map { it.toInt() } }.filter { it.size == it.toSet().size }.toSet()
             val steadyIncreasingList = reducedSetByDoubles.filter { it.sorted() == it }
             val steadyDecreasingList = reducedSetByDoubles.filter { it.sortedDescending() == it }
-            fun inner(list: List<List<Int>>): Set<List<Int>> {
-                val temp = mutableSetOf<List<Int>>()
-                list.forEach {
-                    if (isReportSafe(it)) {
-                        temp.add(it)
-                    }
-                }
-                return temp
-            }
 
             val safeReports = mutableSetOf<List<Int>>()
-            safeReports.addAll(inner(steadyIncreasingList))
-            safeReports.addAll(inner(steadyDecreasingList))
+            safeReports.addAll(steadyIncreasingList.filter { isReportSafe(it) }.toMutableSet())
+            safeReports.addAll(steadyDecreasingList.filter { isReportSafe(it) }.toMutableSet())
             val reducedSetBySafeReports = reducedSet.filter { !safeReports.contains(it) }
 
             var result = numberOfSafeReports
             reducedSetBySafeReports.forEach {
-                val length = it.size
-                for (i in 0 until length) {
+                for (i in 0 until it.size) {
                     val mutableList = it.toMutableList()
                     mutableList.removeAt(i)
                     if (mutableList.size > mutableList.toSet().size) {
@@ -2396,7 +2371,6 @@ data class Path(
     }
 
     fun setToDead() {
-//        println("set to DEAD")
         state = STATE.DEAD
     }
 
