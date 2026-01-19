@@ -1,6 +1,5 @@
-import org.w3c.dom.ls.LSOutput
 import java.io.File
-import kotlin.collections.indexOfFirst
+import kotlin.jvm.java
 
 
 class Advent2025 {
@@ -8,7 +7,7 @@ class Advent2025 {
 
         fun day1_1() { // 1102
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day1.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day1.txt")?.readText()?.split("\r\n") ?: return
             var start = 50
             var result = 0
             rawText.forEach {
@@ -25,7 +24,7 @@ class Advent2025 {
 
         fun day1_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day1.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day1.txt")?.readText()?.split("\r\n") ?: return
 
             val mod = 100
             var start = 50
@@ -69,8 +68,7 @@ class Advent2025 {
 
         fun day2_1() { /// 40055209690
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day2.txt").readText()
-                    .split(",")
+                this::class.java.classLoader?.getResource("2025/day2.txt")?.readText()?.split(",") ?: return
             var result = 0L
             rawText.forEach {
                 val start = it.split("-")[0]
@@ -108,8 +106,7 @@ class Advent2025 {
 
         fun day2_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day2.txt").readText()
-                    .split(",")
+                this::class.java.classLoader?.getResource("2025/day2.txt")?.readText()?.split(",") ?: return
             var result = 0L
             var counter = 0
             val primes = setOf(2, 3, 5, 7)
@@ -174,8 +171,8 @@ class Advent2025 {
 
         fun go() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day2.txt").readText()
-                    .split(",")
+                this::class.java.classLoader?.getResource("2025/day2.txt")?.readText()?.split(",") ?: return
+
 
 //            val ranges = input.split(',')
 //                .map { it.split('-') }
@@ -210,7 +207,7 @@ class Advent2025 {
 
         fun day3_1() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day3.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day3.txt")?.readText()?.split("\r\n") ?: return
 
             var result = 0L
             var i = 0
@@ -255,7 +252,7 @@ class Advent2025 {
 
         fun day3_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day3.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day3.txt")?.readText()?.split("\r\n") ?: return
 
             var result = 0L
             val length = rawText[0].length
@@ -279,7 +276,7 @@ class Advent2025 {
 
         private fun day4_1() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day4.txt")?.readText()?.split("\r\n") ?: return
             var result = 0
             val maxY = rawText.size
             val maxX = rawText[0].length
@@ -332,8 +329,9 @@ class Advent2025 {
 
         private fun day4_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day4.txt").readLines()
-                    .toMutableList()
+                this::class.java.classLoader?.getResource("2025/day4.txt")?.readText()?.split("\r\n")?.toMutableList()
+                    ?: return
+
             var result = 0
             val maxY = rawText.size
             val maxX = rawText[0].length
@@ -411,7 +409,7 @@ class Advent2025 {
 
         fun day5_1() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day5.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day5.txt")?.readText()?.split("\r\n") ?: return
             var result = 0
 
             val ranges = rawText.filter { it.contains("-") }
@@ -432,7 +430,7 @@ class Advent2025 {
 
         fun day5_2() { // 336495597913098
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day5.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day5.txt")?.readText()?.split("\r\n") ?: return
             var result = 0L
 
             val ranges =
@@ -463,7 +461,7 @@ class Advent2025 {
 
         fun day6_1() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day6.txt")?.readText()?.split("\r\n") ?: return
             var result = 0L
             val numOfLines = rawText.size
             val operators = rawText[numOfLines - 1].split("\\s+".toRegex())
@@ -487,7 +485,7 @@ class Advent2025 {
 
         fun day6_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day6.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day6.txt")?.readText()?.split("\r\n") ?: return
             var result = 0L
             var operator = rawText[4][0]
             var tmpResult = if (operator == '*') 1L else 0L
@@ -517,7 +515,7 @@ class Advent2025 {
 
         fun day7_1() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day7.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day7.txt")?.readText()?.split("\r\n") ?: return
             var result = 0L
 
             val beams = mutableListOf(rawText[0].indexOfFirst { it == 'S' })
@@ -544,12 +542,59 @@ class Advent2025 {
 
         fun day7_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2025\\day7.txt").readLines()
+                this::class.java.classLoader?.getResource("2025/day7.txt")?.readText()?.split("\r\n") ?: return
             var result = 0L
 
+            val paths = mutableSetOf(mutableListOf(rawText[0].indexOfFirst { it == 'S' }))
+            rawText.forEachIndexed { index, string ->
+                if (index % 2 != 0 || index == 0) {
+                    return@forEachIndexed
+                }
+                println("index: $index, ${paths.size}")
 
+                string.forEachIndexed { innerIndex, ch ->
+                    if (ch == '^') {
+                        val tmpPath = paths.filter {it.last() == innerIndex}.toSet()
+                        if(tmpPath.isNotEmpty()) {
+                            tmpPath.forEach { element ->
+                                if(paths.any { it == element } && innerIndex == 7 && index == 14){
+                                    println("yes")
+                                }
+                                val res = paths.remove(element)
+                                if(innerIndex == 7 && index == 14) {
+                                    if (!res) {
+                                        val ind = paths.firstOrNull { it == element }
+                                        println(ind)
+                                        println("not removed")
+                                    } else {
+                                        println("removed")
+                                    }
+                                }
+                                val tmp1 = element.toMutableList()
+                                val tmp2 = element.toMutableList()
+                                tmp1.add(innerIndex + 1)
+                                tmp2.add(innerIndex - 1)
+                                paths.add(tmp1)
+                                paths.add(tmp2)
+                            }
+                        }
+//                        val path = paths.firstOrNull { it == index }
+//                        if (path != null) {
+//                            result++
+//                            beams.removeAll { it == index }
+//                            beams.add(index - 1)
+//                            beams.add(index + 1)
+//                        }
+                    }
+                }
+                val longest = paths.maxByOrNull { it.size }!!.size
+                paths.filter { it.size < longest }.forEach {
+                    it.add(it.last())
+                }
+            }
 
-            println("2025 day 7.2: $result")
+            // 3263 too low
+            println("2025 day 7.2: ${paths.size}")
         }
 
         fun advent2025() {
@@ -566,8 +611,8 @@ class Advent2025 {
 //            day5_2()
 //            day6_1()
 //            day6_2()
-            day7_1()
-//            day7_2()
+//            day7_1()
+            day7_2()
         }
 
 
