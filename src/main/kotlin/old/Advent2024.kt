@@ -42,7 +42,7 @@ class Advent2024 {
 
         fun day2_1() { // 269
             val rawList =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day2.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day2.txt")?.readText()?.split("\r\n") ?: return
             val reducedList =
                 rawList.map { line -> line.split(" ").map { it.toInt() } }.filter { it.size == it.toSet().size }
             val steadyIncreasingList = reducedList.filter { it.sorted() == it }
@@ -58,7 +58,7 @@ class Advent2024 {
         fun day2_2() { // 337
             val numberOfSafeReports = 269 // safe reports
             val rawSet =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day2.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day2.txt")?.readText()?.split("\r\n") ?: return
             val reducedSet =
                 rawSet.map { line -> line.split(" ").map { it.toInt() } }
                     .filter { abs(it.size - it.toSet().size) < 2 }.toSet()
@@ -96,7 +96,7 @@ class Advent2024 {
 
         fun day3_1() { // 170807108
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day3.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day3.txt")?.readText() ?: return
             val regex = """mul\([0-9]{1,3},[0-9]{1,3}\)""".toRegex()
             val matchResults = regex.findAll(rawText, 0)
             var result = 0
@@ -109,7 +109,7 @@ class Advent2024 {
 
         fun day3_2() { // 74838033
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day3.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day3.txt")?.readText() ?: return
             val dontSections = rawText.split("don't()")
             val regex = """mul\([0-9]{1,3},[0-9]{1,3}\)""".toRegex()
             var result = 0
@@ -138,7 +138,7 @@ class Advent2024 {
 
         fun day4_1() { // 2514
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day4.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day4.txt")?.readText()?.split("\r\n") ?: return
             val lineLength = rawText[0].length
             val xmas = "XMAS"
             val samx = "SAMX"
@@ -198,7 +198,7 @@ class Advent2024 {
 
         fun day4_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day4.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day4.txt")?.readText()?.split("\r\n") ?: return
             val lineLength = rawText[0].length
             var result = 0
 
@@ -251,7 +251,7 @@ class Advent2024 {
 
         fun day5_1() { // 5964
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day5.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day5.txt")?.readText()?.split("\r\n") ?: return
             val pages = rawText.subList(0, 1176)
             val updates = rawText.subList(1177, rawText.size)
             var result = 0
@@ -280,7 +280,7 @@ class Advent2024 {
 
         fun day5_2() { // 4719
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day5.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day5.txt")?.readText()?.split("\r\n") ?: return
             val pages = rawText.subList(0, 1176)
             val updates = rawText.subList(1177, rawText.size)
             var result = 0
@@ -341,9 +341,9 @@ class Advent2024 {
             println("2024 day 05.2: $result")
         }
 
-        fun day6_1(): MutableSet<Pair<Int, Int>> { // 4454
+        fun day6_1(): MutableSet<Pair<Int, Int>>? { // 4454
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day6.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day6.txt")?.readText()?.split("\r\n") ?: return null
             var direction = 0 // 0:up, 1:right, 2:down, 3:left
             var x = 0
             var y = 0
@@ -375,7 +375,7 @@ class Advent2024 {
 
         fun day6_2() { // 1503
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day6.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day6.txt")?.readText()?.split("\r\n") ?: return
             val nrOfLines = rawText.size
             val lengthOfLine = rawText[0].length
             var startX = 0
@@ -388,7 +388,7 @@ class Advent2024 {
             }
             val loopDetected = mutableListOf<Pair<Int, Int>>()
             val visited = day6_1()
-            visited.forEachIndexed loop@{ indexOuter, pair ->
+            visited?.forEachIndexed loop@{ indexOuter, pair ->
                 if (indexOuter == 0) {
                     return@loop
                 }
@@ -428,7 +428,7 @@ class Advent2024 {
 
         fun day7_1() { // 12839601725877
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day7.txt")?.readText()?.split("\r\n") ?: return
             var solvedEquations = 0L
             rawText.forEach loop@{ line ->
                 val splitted = line.split(": ")
@@ -470,7 +470,7 @@ class Advent2024 {
 
         fun day7_2() { // 149956401519484
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day7.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day7.txt")?.readText()?.split("\r\n") ?: return
             var solvedEquations = 0L
             rawText.forEach loop@{ line ->
                 val splitted = line.split(": ")
@@ -542,7 +542,7 @@ class Advent2024 {
 
         fun day8_1() { // 329
             val rawTextLines =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day8.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day8.txt")?.readText()?.split("\r\n") ?: return
             val lineLength = rawTextLines[0].length
             val numberOfLines = rawTextLines.size
             val coordinates = mutableSetOf<Pair<Pair<Int, Int>, String>>()
@@ -589,7 +589,7 @@ class Advent2024 {
 
         fun day8_2() { //1147 - 1217,1214
             val rawTextLines =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day8.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day8.txt")?.readText()?.split("\r\n") ?: return
             val lineLength = rawTextLines[0].length
             val numberOfLines = rawTextLines.size
             val coordinates = mutableSetOf<Pair<Pair<Int, Int>, String>>()
@@ -660,7 +660,7 @@ class Advent2024 {
 
         fun day9_1() { // 6353658451014
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day9.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day9.txt")?.readText() ?: return
             var result: Long = 0
             val listOfBlocksAndSpaces = mutableListOf<MutableList<Int>>()
             var id = 0
@@ -730,7 +730,7 @@ class Advent2024 {
 
         fun day9_2() { // 6382582136592
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day9.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day9.txt")?.readText() ?: return
             var result: Long = 0
             val listOfBlocksAndSpaces = mutableListOf<MutableList<Int>>()
             var id = 0
@@ -783,7 +783,7 @@ class Advent2024 {
 
         fun day10_1() { // 587
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day10.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day10.txt")?.readText()?.split("\r\n") ?: return
             var result = 0
             val currentPositions = mutableListOf<Pair<Int, Int>>()
             rawText.forEachIndexed { indexLine, line ->
@@ -825,7 +825,7 @@ class Advent2024 {
 
         fun day10_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day10.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day10.txt")?.readText()?.split("\r\n") ?: return
             val currentPositions = mutableListOf<Pair<Int, Int>>()
             val currentPaths = mutableSetOf<MutableList<Pair<Int, Int>>>()
             rawText.forEachIndexed { indexLine, line ->
@@ -880,7 +880,7 @@ class Advent2024 {
 
         fun day11_1() { // 199753
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day11.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day11.txt")?.readText() ?: return
             var stoneArray = rawText.split(" ").map { it.toLong() }.toMutableList()
             var blinks = 25
             while (blinks > 0) {
@@ -905,7 +905,7 @@ class Advent2024 {
 
         fun day11_2() { // 239413123020116
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day11.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day11.txt")?.readText() ?: return
             val stoneArray = rawText.split(" ").map { it.toLong() }.toList()
             var counter = sortedMapOf<Long, Long>()
             stoneArray.forEach {
@@ -947,7 +947,7 @@ class Advent2024 {
 
         fun day12_1() { // 1494342
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day12.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day12.txt")?.readText()?.split("\r\n") ?: return
 
             fun calcPerimeter(line: Int, column: Int): Int {
                 var perimeter = 0
@@ -1026,7 +1026,7 @@ class Advent2024 {
 
         fun day12_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day12.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day12.txt")?.readText()?.split("\r\n") ?: return
 
             fun calcPerimeter(line: Int, column: Int): Int {
                 var perimeter = 0
@@ -1173,7 +1173,7 @@ class Advent2024 {
 
         fun day13_1() { // 37901
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day13.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day13.txt")?.readText() ?: return
             val array = rawText.split("\r\n\r\n")
             val tokenA = 3
             val tokenB = 1
@@ -1225,7 +1225,7 @@ class Advent2024 {
 
         fun day13_2() {
             val rawText =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day13.txt").readText()
+                this::class.java.classLoader?.getResource("2024/day13.txt")?.readText() ?: return
             val array = rawText.split("\r\n\r\n")
             val tokenA = 3
             val tokenB = 1
@@ -1240,7 +1240,6 @@ class Advent2024 {
                 val buttonAY = split[0].split(":")[1].split(",")[1].split("+")[1].toLong()
                 val buttonBX = split[1].split(":")[1].split(",")[0].split("+")[1].toLong()
                 val buttonBY = split[1].split(":")[1].split(",")[1].split("+")[1].toLong()
-//                val tmp = mutableSetOf<Pair<Long, Long>>()
 
                 val first = ((x * buttonAY) - (y * buttonAX))
                 val second = ((-buttonBY * buttonAX) + (buttonBX * buttonAY))
@@ -1571,7 +1570,7 @@ class Advent2024 {
 
         fun day16_1() { // 160624
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day16.xxx").readLines()
+                this::class.java.classLoader?.getResource("2024/day16.txt")?.readText()?.split("\r\n") ?: return
 
             val startY = map.indexOfFirst { it.contains("S") }
             val startX = map.first { it.contains("S") }.indexOf('S')
@@ -1690,7 +1689,7 @@ class Advent2024 {
 
         fun day16_2() { // 692
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day16.xxx").readLines()
+                this::class.java.classLoader?.getResource("2024/day16.txt")?.readText()?.split("\r\n") ?: return
 
             val startY = map.indexOfFirst { it.contains("S") }
             val startX = map.first { it.contains("S") }.indexOf('S')
@@ -1809,7 +1808,7 @@ class Advent2024 {
 
         fun day17_1() { // 7,0,3,1,2,6,3,7,1
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day17.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day17.txt")?.readText()?.split("\r\n") ?: return
 
             var registerA: Long = map.first().split(":")[1].trim().toLong()
             var registerB: Long = map[1].split(":")[1].trim().toLong()
@@ -1832,7 +1831,6 @@ class Advent2024 {
                 }
 
                 fun calcAdv(): Long {
-//                    println("${registerA.shr(currentCombo.toInt())}")
                     return registerA.shr(3)
                 }
 
@@ -1843,37 +1841,22 @@ class Advent2024 {
                 }
 
                 fun calcBst(): Long {
-//                    println("${currentCombo.and(7L)}")
                     return registerA.and(7L)
                 }
 
                 fun calcJnz() {
-//                    if(registerA == 0L){
-//                        println("${insP + 2}")
-//                    } else{
-//                        println("$currentLiteral")
-//                    }
-//                    println("jump: $currentLiteral")
                     insP = if (registerA == 0L) insP else currentLiteral - 2
                 }
 
                 fun calcBxc(): Long {
-//                    println("${registerB xor registerC}")
                     return registerB xor registerC
                 }
 
                 fun calcOut(): Long {
-//                    println("${currentCombo.and(7L)}")
                     return currentCombo.and(7L)
                 }
 
-//                fun calcBdv(): Long {
-////                    println("${registerA shr currentCombo.toInt()}")
-//                    return registerA shr currentCombo.toInt()
-//                }
-
                 fun calcCdv(): Long {
-//                    println("${registerA shr currentCombo.toInt()}")
                     return registerA shr currentCombo.toInt()
                 }
 
@@ -1900,7 +1883,7 @@ class Advent2024 {
 
         fun day17_2() { // 109020013201563
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day17.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day17.txt")?.readText()?.split("\r\n") ?: return
 
             var registerA: Long
             var registerB: Long
@@ -1940,12 +1923,10 @@ class Advent2024 {
                     }
 
                     fun calcAdv(): Long {
-//                    println("${registerA.shr(currentCombo.toInt())}")
                         return registerA.shr(3)
                     }
 
                     fun calcBxl(): Long {
-//                    println("${registerB xor currentLiteral.toLong()}")
                         return registerB xor currentLiteral.toLong()
                     }
 
@@ -1958,7 +1939,6 @@ class Advent2024 {
                     }
 
                     fun calcBxc(): Long {
-//                    println("${registerB xor registerC}")
                         return registerB xor registerC
                     }
 
@@ -1966,13 +1946,7 @@ class Advent2024 {
                         return registerB.and(7L)
                     }
 
-//                fun calcBdv(): Long {
-////                    println("${registerA shr currentCombo.toInt()}")
-//                    return registerA shr currentCombo.toInt()
-//                }
-
                     fun calcCdv(): Long {
-//                    println("${registerA shr currentCombo.toInt()}")
                         return registerA shr currentCombo.toInt()
                     }
 
@@ -2048,7 +2022,7 @@ class Advent2024 {
 
         fun day18_2() { //20,64
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day18.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day18.txt")?.readText()?.split("\r\n") ?: return
 
             var result = ""
             val noVertex = mutableSetOf<Pair<Int, Int>>()
@@ -2098,7 +2072,7 @@ class Advent2024 {
 
         fun day19_1() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day19.txt")?.readText()?.split("\r\n") ?: return
 
             val patterns = map[0].split(", ").sortedBy { it.length }.reversed()
             val designs = map.subList(2, map.size).filter { !it.startsWith("wrbbr") }
@@ -2135,7 +2109,7 @@ class Advent2024 {
 
         fun day19_2() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day19.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day19.txt")?.readText()?.split("\r\n") ?: return
 
             val patterns = map[0].split(", ").sortedBy { it.length }.reversed()
             val designs = map.subList(2, map.size).filter { !it.startsWith("wrbbr") }
@@ -2175,84 +2149,84 @@ class Advent2024 {
 
         fun day20_1() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day20.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day20.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day20_2() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day20.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day20.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day21_1() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day21.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day21.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day21_2() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day21.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day21.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day22_1() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day22.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day22.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day22_2() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day22.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day22.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day23_1() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day23.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day23.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day23_2() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day23.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day23.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day24_1() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day24.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day24.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day24_2() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day24.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day24.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day25_1() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day25.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day25.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
 
         fun day25_2() {
             val map =
-                File("C:\\Users\\bala\\IdeaProjects\\AdventOfCodce\\src\\main\\resources\\2024\\day25.txt").readLines()
+                this::class.java.classLoader?.getResource("2024/day25.txt")?.readText()?.split("\r\n") ?: return
 
             println(map)
         }
