@@ -1,4 +1,4 @@
-import java.io.File
+
 import kotlin.jvm.java
 
 
@@ -173,10 +173,6 @@ class Advent2025 {
             val rawText =
                 this::class.java.classLoader?.getResource("2025/day2.txt")?.readText()?.split(",") ?: return
 
-
-//            val ranges = input.split(',')
-//                .map { it.split('-') }
-//                .map { Range(it[0].toLong(), it[1].toLong()) }
             val finalSet = mutableListOf<Long>()
             var invalidIdSum = 0L
 
@@ -545,7 +541,8 @@ class Advent2025 {
                 this::class.java.classLoader?.getResource("2025/day7.txt")?.readText()?.split("\r\n") ?: return
             var result = 0L
 
-            val paths = mutableSetOf(mutableListOf(rawText[0].indexOfFirst { it == 'S' }))
+            var paths = mutableListOf(Pair(1, rawText[0].indexOfFirst { it == 'S' }))
+            result++
             rawText.forEachIndexed { index, string ->
                 if (index % 2 != 0 || index == 0) {
                     return@forEachIndexed
@@ -553,48 +550,18 @@ class Advent2025 {
                 println("index: $index, ${paths.size}")
 
                 string.forEachIndexed { innerIndex, ch ->
-                    if (ch == '^') {
-                        val tmpPath = paths.filter {it.last() == innerIndex}.toSet()
-                        if(tmpPath.isNotEmpty()) {
-                            tmpPath.forEach { element ->
-                                if(paths.any { it == element } && innerIndex == 7 && index == 14){
-                                    println("yes")
-                                }
-                                val res = paths.remove(element)
-                                if(innerIndex == 7 && index == 14) {
-                                    if (!res) {
-                                        val ind = paths.firstOrNull { it == element }
-                                        println(ind)
-                                        println("not removed")
-                                    } else {
-                                        println("removed")
-                                    }
-                                }
-                                val tmp1 = element.toMutableList()
-                                val tmp2 = element.toMutableList()
-                                tmp1.add(innerIndex + 1)
-                                tmp2.add(innerIndex - 1)
-                                paths.add(tmp1)
-                                paths.add(tmp2)
-                            }
-                        }
-//                        val path = paths.firstOrNull { it == index }
-//                        if (path != null) {
-//                            result++
-//                            beams.removeAll { it == index }
-//                            beams.add(index - 1)
-//                            beams.add(index + 1)
-//                        }
+                    val beams = paths.firstOrNull { it.second == innerIndex }
+                    if (ch == '^' && beams != null) {
+                        paths.remove(beams)
+                        paths.add(Pair(beams.first + 1, innerIndex + 1))
+                        result++
+
                     }
-                }
-                val longest = paths.maxByOrNull { it.size }!!.size
-                paths.filter { it.size < longest }.forEach {
-                    it.add(it.last())
                 }
             }
 
             // 3263 too low
-            println("2025 day 7.2: ${paths.size}")
+            println("2025 day 7.2: $result")
         }
 
         fun advent2025() {

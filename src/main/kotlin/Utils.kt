@@ -3,9 +3,6 @@ import kotlin.math.abs
 
 class Utils {
     companion object {
-        fun readIntCsv(absolutePath: String): List<Int> {
-            return File(absolutePath).readLines().map { it.toInt() }
-        }
 
         fun isReportSafe(list: List<Int>): Boolean {
             val numbersIterator = list.iterator()
