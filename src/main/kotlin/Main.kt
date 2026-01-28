@@ -1,3 +1,4 @@
+import Advent2024.Companion.advent2024
 import Advent2025.Companion.advent2025
 
 fun main() {
@@ -11,6 +12,6 @@ fun main() {
 //    advent2021()
 //    advent2022()
 //    advent2023()
-//    advent2024()
-    advent2025()
+    advent2024()
+//    advent2025()
 }
