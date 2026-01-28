@@ -38,7 +38,7 @@ class Advent2024 {
             val list2 =
                 this::class.java.classLoader?.getResource("2024/day1_list2.txt")?.readText()?.split("\r\n")
                     ?.map { it.toInt() }
-            if(list2 != null) {
+            if (list2 != null) {
                 val commonList = list1?.intersect(list2)
                 val frequencies = list1?.groupingBy { it }?.eachCount()
                 val filteredFrequencies = frequencies?.filterKeys { commonList?.contains(it) ?: true }
@@ -1378,7 +1378,7 @@ class Advent2024 {
                 this::class.java.classLoader?.getResource("2024/day15.txt")?.readText()
                     ?.split("\r\n\r\n")[1]?.replace("\r\n", "")
 
-            if(map != null && commands != null) {
+            if (map != null && commands != null) {
                 var x = map.first { it.contains("@") }.indexOfFirst { it == '@' }
                 var y = IntStream.range(1, map.size).filter { map[it].contains("@") }.findFirst().asInt
                 commands.forEach command@{ c ->
@@ -1455,7 +1455,7 @@ class Advent2024 {
                     ?.filter { it.startsWith("#") }
                     ?.map { it.replace("#", "##").replace(".", "..").replace("@", "@.").replace("O", "[]") }
                     ?.toMutableList()
-            if(map != null) {
+            if (map != null) {
                 var x = map.first { it.contains("@") }.indexOfFirst { it == '@' }
                 var y = IntStream.range(1, map.size).filter { map[it].contains("@") }.findFirst().asInt
                 val width = map[0].length
